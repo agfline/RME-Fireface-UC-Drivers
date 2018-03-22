@@ -1,5 +1,12 @@
 
-int setVolume( uint32_t channelID, int8_t channelType, uint32_t outputID, int32_t level ) {
+#include <stdio.h>
+#include <stdint.h>
+
+#include "../libusb_test/usb.h"
+
+
+int setVolume( libusb_device_handle *dev, uint32_t channelID, int8_t channelType, uint32_t outputID, int32_t level )
+{
 
 /*
 	CCardIOUC::SetGain( int,	rdi	this pointer ?
@@ -36,7 +43,7 @@ int setVolume( uint32_t channelID, int8_t channelType, uint32_t outputID, int32_
 */
 		outputID += 0x3e0;	// 992
 
-	} else {			// INPUT & PLAYBACK
+	} else {			// INPUT (0x00) & PLAYBACK (0x01)
 /*
 		0x100061cf0	lea	eax, qword [ds:rdx+rdx*8]
 		0x100061cf3	lea	eax, qword [ds:rsi+rax*2]
@@ -76,6 +83,8 @@ int setVolume( uint32_t channelID, int8_t channelType, uint32_t outputID, int32_
 	// gcc implements arithmetic shift so that's fine
 	// level >>= 0x2;
 
+	// TODO: I dont fucking undersand what i wrote above..
+
 /*
 	0x100061d0f	and	ecx, 0x3fff
 	0x100061d15	and	r8d, 0x3
@@ -84,7 +93,7 @@ int setVolume( uint32_t channelID, int8_t channelType, uint32_t outputID, int32_
 */
 	outputID &= 0x3fff;
 	channelID = ((level & 0x3) << 0xe) | outputID;
-	
+
 /*
 	0x100061d20	mov	qword [ss:rbp-0x18], r8		; wIndex
 	0x100061d24	mov	dword [ss:rbp-0x24], 0x0
@@ -119,5 +128,7 @@ int setVolume( uint32_t channelID, int8_t channelType, uint32_t outputID, int32_
 	ctrl.wIndex = channelID;
 	ctrl.wLength = 0x0000;
 
-}
+	send_ctrl_setup( dev, &ctrl, NULL );
 
+	return 0;
+}

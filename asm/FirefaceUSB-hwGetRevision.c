@@ -1,5 +1,12 @@
 
-hwGetRevision( libusb_device_handle *dev, unsigned int *rev ) {
+#include <stdio.h>
+#include <stdint.h>
+
+#include "../libusb_test/usb.h"
+
+
+void hwGetRevision( libusb_device_handle *dev, unsigned int *rev )
+{
 
 /*
 	hwGetRevision( IOUSBDevice*, 	rdi	IOUSBDevice
@@ -21,8 +28,9 @@ hwGetRevision( libusb_device_handle *dev, unsigned int *rev ) {
 	0x0000102a	mov	dword [ss:rbp-0x0C], 0x0
 	0x00001031	mov	dword [ss:rbp-0x10], 0x0
 */
-	uint32_t len  = 0;
+	// uint32_t len  = 0;
 	uint32_t data = 0;
+	ctrl_setup ctrl;
 
 /*
 	0x00001038	lea	rax, qword [ss:rbp-0x0C]
@@ -37,18 +45,26 @@ hwGetRevision( libusb_device_handle *dev, unsigned int *rev ) {
 	0x0000104f	lea	r8, qword [ss:rbp-0x10]			; argument #5 for method
 	0x00001053	mov	r9d, 0x4				; argument #6 for method
 	0x00001059	xor	ecx, ecx				; argument #4 for method
-	0x0000105b	call	Usb_vendor_device_request( IOUSBDevice*, 
+	0x0000105b	call	Usb_vendor_device_request( IOUSBDevice*,
 							   unsigned char, 	; bRequest	0x1c
 							   unsigned short,	; wValue	0
 							   unsigned short,	; wIndex	0
-							   void*, 		; data		
+							   void*, 		; data
 							   unsigned short,	; wLength	0x4
 							   unsigned char,	; bmRequestType	0x1 (0xc0)
 							   unsigned int*	; &len
 							 )
 */
-//	usb_vendor_device_request( IOUSBDevice, 0x1c, 0, 0, data, 0x04, 0x01, len_p );
-	len = send_ctrl_setup_alt( dev, 0xc0, 0x1c, 0x0000, 0x0000, 0x0004, (unsigned char *)&data );
+	// usb_vendor_device_request( IOUSBDevice, 0x1c, 0, 0, data, 0x04, 0x01, len_p );
+	// len = send_ctrl_setup_alt( dev, 0xc0, 0x1c, 0x0000, 0x0000, 0x0004, (unsigned char *)&data );
+
+	ctrl.bmRequestType = 0xc0;
+	ctrl.bRequest = 0x1c;
+	ctrl.wValue = 0x0000;
+	ctrl.wIndex = 0x0000;
+	ctrl.wLength = 0x0004;
+
+	send_ctrl_setup( dev, &ctrl, (unsigned char *)&data );
 
 /*
 
@@ -68,5 +84,3 @@ hwGetRevision( libusb_device_handle *dev, unsigned int *rev ) {
 */
 	return;		// TODO: depends on Usb_vendor_device_request() return (eax ?)
 }
-
-
