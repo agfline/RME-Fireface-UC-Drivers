@@ -496,6 +496,14 @@ int main( int argc, char **argv )
 	printf("Firmware Version : %d (0x%02x)\n", rev, rev);
 
 
+
+	/*
+		Init Hardware
+	*/
+
+	hwInitHardware( devh );
+
+
 	goto out;
 
 

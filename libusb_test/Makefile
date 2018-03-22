@@ -7,6 +7,7 @@ SRC = ./rme_uc.c\
 	  ../asm/FirefaceUSB-hwSetSampleRate.c\
 	  ../asm/FirefaceUSB-hwGetRevision.c\
 	  ../asm/FirefaceUSB-hwMuteChannels.c\
+	  ../asm/FirefaceUSB-hwInitHardware.c\
 	  ../asm/TotalmixFX-CCardIOUC\:\:SetGain.c
 
 all: $(SRC)
