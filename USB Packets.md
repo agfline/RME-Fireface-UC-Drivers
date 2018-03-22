@@ -1,6 +1,20 @@
 
 ## Init sequence (on plug usb)
 
+* We have one set of 22 packets starting @ 123, incrementing wIndex in ascending order
+with fix values : 0x0a, 0x00, 0x2e
+* Then, another set of 20 packets starting @ 186, with no particular incrementing order,
+but are paired by two (stereo ? while loop ? probably stereo groups.). Missing indexes are 2 and 3.
+
+```
+0x40 : 26 (0x1a)  |  SetGain() / hwWriteLedAndPga()
+```
+
+Note: Those could be some initialization first, followed by user-saved gain value if changed.
+This should be tested and verified with TotalmixFX and wireshark.
+
+## Once iface's up
+
 * 18 x UNKNOWN CTRL SETUP Packets @ pckn° 1566
 ```
 0x40 : 21 (0x15)
