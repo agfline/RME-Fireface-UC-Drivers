@@ -1,13 +1,6 @@
 
 ## Init sequence (on plug usb)
 
-
-* 36 x UNKNOWN CTRL SETUP Packets @ pckn° 43
-```
-0x40 : 22 (0x16)
-Highly probably coming from hwInitHardware() from FirefaceUSB.kext
-```
-
 * 18 x UNKNOWN CTRL SETUP Packets @ pckn° 1566
 ```
 0x40 : 21 (0x15)
@@ -36,12 +29,16 @@ Highly probably coming from hwInitHardware() from FirefaceUSB.kext
 ## Notes
 
 ```
-0x40 : 16 (0x10)  |  Set Sample Rate (pkt 2/2), Clk src, single speed, coax AES/SPDIF
+0x40 : 16 (0x10)  |  Set Sample Rate (pkt 2/2)
+                  |  Set Clk src, single speed, coax AES/SPDIF
+                  |  UNKNOWN - sent by hwInitHardware() from FirefaceUSB.kext
 0x40 : 18 (0x12)  |  Set in / pb / output volume
 0x40 : 19 (0x13)  |  Hardware Mute
 0x40 : 20 (0x14)  |  Hardware unMute
+0x40 : 22 (0x16)  |  UNKNOWN - sent by hwInitHardware() from FirefaceUSB.kext
 0x40 : 23 (0x17)  |  Set +48v / PAD / Hi-Z
 0x40 : 26 (0x1a)  |  Always from hwWriteLedAndPga() function (Gain, output vol)
 0x40 : 27 (0x1b)  |  Set Sample Rate (pkt 1/2)
 0xc0 : 28 (0x1c)  |  Get firmware version
+0x40 : 32 (0x20)  |  UNKNOWN - sent by hwInitHardware() from FirefaceUSB.kext
 ```
