@@ -50,18 +50,15 @@ int do_send_ctrl_setup( libusb_device_handle *dev, ctrl_setup *ctrl, unsigned ch
 }
 
 
-// #define send_ctrl_setup( de, ct, da ) send_ctrl_setup_trace( de, ct, da, __func__ )
-
-
-int send_ctrl_setup_alt( libusb_device_handle *dev, uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, uint16_t wLength, unsigned char *data )
-{
-	ctrl_setup ctrl;
-
-	ctrl.bmRequestType = bmRequestType;
-	ctrl.bRequest = bRequest;
-	ctrl.wValue = wValue;
-	ctrl.wIndex = wIndex;
-	ctrl.wLength = wLength;
-
-	return send_ctrl_setup( dev, &ctrl, data );
-}
+// int send_ctrl_setup_alt( libusb_device_handle *dev, uint8_t bmRequestType, uint8_t bRequest, uint16_t wValue, uint16_t wIndex, uint16_t wLength, unsigned char *data )
+// {
+// 	ctrl_setup ctrl;
+//
+// 	ctrl.bmRequestType = bmRequestType;
+// 	ctrl.bRequest = bRequest;
+// 	ctrl.wValue = wValue;
+// 	ctrl.wIndex = wIndex;
+// 	ctrl.wLength = wLength;
+//
+// 	return send_ctrl_setup( dev, &ctrl, data );
+// }
