@@ -7,6 +7,6 @@
 #define RME_UC_PRODUCT		0x3fc6  /* 16326 */
 
 
-int rme_init_iface( libusb_device_handle *dev );
+// int rme_init_iface( libusb_device_handle *dev );
 
 #endif

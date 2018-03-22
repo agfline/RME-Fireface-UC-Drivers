@@ -197,37 +197,37 @@ void fill_audio_data( uint32_t *buf, size_t buf_sz, uint32_t *pcm, struct libusb
 }
 
 
-size_t get_audio_data_from_file( const char *filename, uint32_t **buf )
-{
-	size_t size = 0;
-
-	FILE *f = fopen(filename, "rb");
-
-	if (f == NULL)
-	{
-		*buf = NULL;
-		return -1; // -1 means file opening fail
-	}
-
-	fseek(f, 0, SEEK_END);
-
-	size = ftell(f);
-
-	fseek(f, 0, SEEK_SET);
-
-	*buf = malloc(size+1);
-
-	if (size/sizeof(uint32_t) != fread(*buf, sizeof(uint32_t), size/sizeof(uint32_t), f))
-	{
-		free(*buf);
-		*buf = NULL;
-		return -2; // -2 means file reading fail
-	}
-
-	fclose(f);
-	// (*buf)[size] = 0;
-	return size;
-}
+// size_t get_audio_data_from_file( const char *filename, uint32_t **buf )
+// {
+// 	size_t size = 0;
+//
+// 	FILE *f = fopen(filename, "rb");
+//
+// 	if (f == NULL)
+// 	{
+// 		*buf = NULL;
+// 		return -1; // -1 means file opening fail
+// 	}
+//
+// 	fseek(f, 0, SEEK_END);
+//
+// 	size = ftell(f);
+//
+// 	fseek(f, 0, SEEK_SET);
+//
+// 	*buf = malloc(size+1);
+//
+// 	if (size/sizeof(uint32_t) != fread(*buf, sizeof(uint32_t), size/sizeof(uint32_t), f))
+// 	{
+// 		free(*buf);
+// 		*buf = NULL;
+// 		return -2; // -2 means file reading fail
+// 	}
+//
+// 	fclose(f);
+// 	// (*buf)[size] = 0;
+// 	return size;
+// }
 
 
 
@@ -444,13 +444,12 @@ static void sig_hdlr(int signum)
 }
 
 
-int main(int argc, char **argv)
+int main( int argc, char **argv )
 {
 
 	// SHUT GCC UP
 	if ( argc > 0 ) argv[0] = argv[0];
 
-	int loop_cnt = 0;
 	// uint16_t val = 0x200;
 	int rc = 0;
 
@@ -458,7 +457,6 @@ int main(int argc, char **argv)
 
 	// devh = dev;
 
-	ctrl_setup ctrl;
 
 	rc = libusb_init(NULL);
 
@@ -487,6 +485,22 @@ int main(int argc, char **argv)
 
 	libusb_set_interface_alt_setting( devh, rc, 1 );
 
+
+	/*
+		Get Hardware Revision (Firmware Version)
+	*/
+
+	uint32_t rev = 0;
+
+	hwGetRevision( devh, &rev );
+	printf("Firmware Version : %d (0x%02x)\n", rev, rev);
+
+
+	goto out;
+
+
+
+
 	goto SEND_AUDIO;
 
 //	printf("Setting interface to 1\n");
@@ -504,11 +518,14 @@ int main(int argc, char **argv)
 		Get Hardware Revision (Firmware Version)
 	*/
 
-	uint32_t rev = 0;
+	// uint32_t rev = 0;
 
 	hwGetRevision( devh, &rev );
 	printf("Firmware Version : %d (0x%02x)\n", rev, rev);
 
+
+
+	ctrl_setup ctrl;
 
 	/*
 		call hwInitHarware()
@@ -563,6 +580,8 @@ int main(int argc, char **argv)
 	/*
 		do some stuff seen in wireshark.
 		This was not found in original drivers yet..
+
+		EDIT: NOW IT IS, MOTHERFUCKAAAAAAA !!!
 	*/
 
 	printf("\n");
@@ -627,6 +646,14 @@ int main(int argc, char **argv)
 	// set mixer (routes)
 
 //		printf(" %d ms\n", clock());
+
+
+
+
+
+
+
+
 /***********************************************************************************************************
 					    P L A Y    A U D I O
 ***********************************************************************************************************/
@@ -646,6 +673,10 @@ SEND_AUDIO:
 	sigact.sa_flags = 0;
 	sigaction(SIGINT, &sigact, NULL);
 
+
+
+
+	int loop_cnt = 0;
 
 	while (!do_exit) {
 
