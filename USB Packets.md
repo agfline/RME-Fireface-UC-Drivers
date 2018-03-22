@@ -10,8 +10,10 @@ but are paired by two (stereo ? while loop ? probably stereo groups.). Missing i
 0x40 : 26 (0x1a)  |  SetGain() / hwWriteLedAndPga()
 ```
 
-Note: Those could be some initialization first, followed by user-saved gain value if changed.
+**Note**: Those could be some initialization first, followed by user-saved gain value if different.
 This should be tested and verified with TotalmixFX and wireshark.
+
+**TODO**: Find the function sending those guys !
 
 ## Once iface's up
 

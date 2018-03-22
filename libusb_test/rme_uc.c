@@ -504,7 +504,7 @@ int main( int argc, char **argv )
 	hwInitHardware( devh );
 
 
-	goto out;
+	// goto out;
 
 
 
