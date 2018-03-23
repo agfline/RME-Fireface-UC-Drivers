@@ -15,12 +15,11 @@ This should be tested and verified with TotalmixFX and wireshark.
 
 **TODO**: Find the function sending those guys !
 
-## Once iface's up
+**Conclusion**: The first set always send the same values. This must be some init.
+                The second is the application of the user values from TotalMix. These are sent only if they are different from the "init".
+                Nice guess, dude.
 
-* 18 x UNKNOWN CTRL SETUP Packets @ pckn° 1566
-```
-0x40 : 21 (0x15)
-```
+## Once iface's up
 
 * 6 x UNKNOWN CTRL SETUP Packets @ pckn° 1602
 ```
@@ -37,8 +36,10 @@ This should be tested and verified with TotalmixFX and wireshark.
 * alternate with
 ```
 0xc0 : 17 (0x11) Found in CHardware::GetStatus() from Fireface USB Settings
-                 Found in hwGetIsoModeFlag() from FirefaceUSB.kext
-0xc0 : 16 (0x10)
+                   Found in hwGetStatusReg() from FirefaceUSB.kext
+                   Found in hwGetIsoModeFlag() from FirefaceUSB.kext
+                   Found in hwGetRate() from FirefaceUSB.kext
+0xc0 : 16 (0x10) Found in hwGetRate() from FirefaceUSB.kext
 ```
 
 
@@ -51,6 +52,7 @@ This should be tested and verified with TotalmixFX and wireshark.
 0x40 : 18 (0x12)  |  Set in / pb / output volume
 0x40 : 19 (0x13)  |  Hardware Mute
 0x40 : 20 (0x14)  |  Hardware unMute
+0x40 : 21 (0x15)  |  Set Loopback on output
 0x40 : 22 (0x16)  |  UNKNOWN - sent by hwInitHardware() from FirefaceUSB.kext
 0x40 : 23 (0x17)  |  Set +48v / PAD / Hi-Z
 0x40 : 26 (0x1a)  |  Always from hwWriteLedAndPga() function (Gain, output vol)

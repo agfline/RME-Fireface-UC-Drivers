@@ -18,7 +18,14 @@ int do_send_ctrl_setup_trace( libusb_device_handle *dev, ctrl_setup *ctrl, unsig
          caller_name
       );
 
-    return do_send_ctrl_setup( dev, ctrl, data );
+    int rc = 0;
+
+    if ( dev != NULL )
+    {
+        do_send_ctrl_setup( dev, ctrl, data );
+    }
+
+    return rc;
 }
 
 

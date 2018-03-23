@@ -471,19 +471,21 @@ int main( int argc, char **argv )
 
 	if (!devh) {
 		fprintf(stderr, "Error finding USB device\n");
-		goto out;
+		// goto out;
 	}
 
 	printf("claiming\n");
 
-	rc = libusb_claim_interface(devh, 0);
+	if ( devh )
+		rc = libusb_claim_interface(devh, 0);
 
 	if (rc < 0) {
 		fprintf(stderr, "Error claiming interface: %s\n", libusb_error_name(rc));
 		goto out;
 	}
 
-	libusb_set_interface_alt_setting( devh, rc, 1 );
+	if ( devh )
+		libusb_set_interface_alt_setting( devh, rc, 1 );
 
 
 	/*
@@ -504,7 +506,11 @@ int main( int argc, char **argv )
 	hwInitHardware( devh );
 
 
-	// goto out;
+
+	hwGetRate( devh, 0 );
+
+
+	goto out;
 
 
 

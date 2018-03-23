@@ -166,6 +166,26 @@ out AD___8     1009
 
 ## Controles
 
+### Set Loopback
+
+**TODO** : find function in TotalmixFX
+**TODO** : Init -> default values ? user values ? must be user values.
+
+La fonction Loopback permet de router le signal présent sur une sortie vers l'entrée correspondante.
+
+Le Loopback de chaque sortie est définit lors de l'initialisation de l'interface, juste après l'initialisation des "faders".
+
+
+```
+Control Transfer : 0x00
+============================
+bmRequestType    : 0x40
+bRequest         : 0x15 (21)
+wValue           : 0x0001 on / 0x0000 off
+wIndex           : channelID
+wLength          : 0x0000
+```
+
 ### Set in & pb Volume
 
 **TODO** : ok

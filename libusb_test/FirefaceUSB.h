@@ -11,5 +11,6 @@ void hwGetRevision( libusb_device_handle *dev, unsigned int *rev );
 int hwMuteChannels ( libusb_device_handle *dev, /*uint32_t value, uint16_t productId,*/ uint8_t unmute );
 int setVolume( libusb_device_handle *dev, uint32_t channelID, int8_t channelType, uint32_t outputID, int32_t level );
 void hwInitHardware ( libusb_device_handle *dev/*, uint16_t productId*/ );
+uint32_t hwGetRate ( libusb_device_handle *devh, /*uint16_t productId,*/ uint8_t /*dx*/ unknownArg );
 
 #endif

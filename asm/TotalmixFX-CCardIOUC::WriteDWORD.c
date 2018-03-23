@@ -40,32 +40,22 @@
 	0x100061ec3	sar	eax, 0x10
 	0x100061ec6	cmp	eax, 0x12
 	0x100061ec9	jl	0x100061ef6
-*/
-	if ( (val >> 0x10) < 0x12 ) {
-/*
-		0x100061ef6	mov	byte [ds:rdi+0x2a0], 0x1	; case 9
-		0x100061efd	mov	al, 0x1
-		0x100061eff	jmp	0x100061ff4
-*/
-		// TODO		byte [ds:rdi+0x2a0], 0x1
-		return 1;
 
-	}
-/*
 	0x100061ecb	add	eax, 0xffffffea
 	0x100061ece	cmp	eax, 0xb
 	0x100061ed1	ja	0x100061ef6
 */
-	if ( (val >> 0x10) + 0xffffffea > 0xb ) {
+	if ( ((val >> 0x10) < 0x12) ||
+ 	      (val >> 0x10) + 0xffffffea > 0xb ) )
+	{
 /*
 		0x100061ef6	mov	byte [ds:rdi+0x2a0], 0x1	; case 9
 		0x100061efd	mov	al, 0x1
 		0x100061eff	jmp	0x100061ff4
 */
-		// TODO		byte [ds:rdi+0x2a0], 0x1
 		return 1;
-
 	}
+
 
 /*
 	0x100061ed3	lea	rcx, qword [ds:0x10006200c]
@@ -101,7 +91,7 @@
 		case 5:
 		case 8:
 		case 9:
-			// TODO		byte [ds:rdi+0x2a0], 0x1
+
 			return 1;
 /*
 		0x100061f04	test	si, si				; case 1
@@ -185,7 +175,7 @@
 				0x100061f5b	and	esi, 0x2
 				0x100061f5e	shl	rsi, 0x2
 				0x100061f62	or	rsi, rax
-				0x100061f65	xor	rsi, 0x8 
+				0x100061f65	xor	rsi, 0x8
 				; rsi = (((val & 0x2) << 0x2) | (1 << 0xf)) ^ 0x8 = 0x8008
 				0x100061f69	mov	eax, 0x8008
 				0x100061f6e	jmp	0x100061fc0
@@ -268,7 +258,7 @@
 	0x100061ffd	add	rsp, 0x28
 	0x100062001	pop	rbx
 	0x100062002	pop	rbp
-	0x100062003	ret	
+	0x100062003	ret
 
 	0x100062004	call	imp___stubs____stack_chk_fail	; XREF=__ZN9CCardIOUC10WriteDWORDEj+334
 			; endp
@@ -277,4 +267,3 @@
 	0x10006201c	dd	0xfffffeea, 0xfffffeea, 0xffffff0e, 0xffffff25
 	0x10006202c	dd	0xfffffeea, 0xfffffeea, 0xffffff39, 0xffffff64
 */
-
