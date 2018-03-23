@@ -37,7 +37,7 @@ This should be tested and verified with TotalmixFX and wireshark.
 ```
 0xc0 : 17 (0x11) Found in CHardware::GetStatus() from Fireface USB Settings
                    Found in hwGetStatusReg() from FirefaceUSB.kext
-                   Found in hwGetIsoModeFlag() from FirefaceUSB.kext
+                   0x3fc6/FALSE Found in hwGetIsoModeFlag() from FirefaceUSB.kext
                    Found in hwGetRate() from FirefaceUSB.kext
 0xc0 : 16 (0x10) Found in hwGetRate() from FirefaceUSB.kext
 ```

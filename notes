@@ -14,9 +14,6 @@ de_RME_driver_USBAudioUserClient::sUserClientSetRecordOut()
 hwGetRedundancyModes() -> to disassemble BUT looks like its not playing for 0x3fc6
     - Calls Usb_vendor_device_request()
 
-hwGetIsoModeFlag() -> to disassemble, called by timer, sends 0xc0 0x11
-    - Calls Usb_vendor_device_request()
-
 
 
 

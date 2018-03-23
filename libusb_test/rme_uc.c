@@ -506,8 +506,11 @@ int main( int argc, char **argv )
 	hwInitHardware( devh );
 
 
-
+	// TODO: TEST
 	hwGetRate( devh, 0 );
+
+	// TODO: TEST
+	hwGetIsoModeFlag( devh );
 
 
 	goto out;
