@@ -5,7 +5,7 @@
 #include "../libusb_test/usb.h"
 
 
-uint32_t hwGetRate ( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /*dx*/ unknownArg )
+uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /*dx*/ unknownArg )
 {
 
 	uint16_t productId = 0x3fc6;
@@ -87,8 +87,6 @@ uint32_t hwGetRate ( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t 
 	0x00001422	mov	rdi, r14			; argument #1 (IOUSBDevice)   for method
 	0x00001425	xor	ecx, ecx			; argument #4 (wIndex)        for method
 	0x00001427	call	Usb_vendor_device_request()
-	0x0000142c	test    eax, eax
-	0x0000142e	jne	0x1692
 */
 	uint32_t data_4 = 0;		// rbp+var_5C
 //	uint32_t num_tx_bytes_4 = 0;	// rbp+var_24
@@ -99,13 +97,25 @@ uint32_t hwGetRate ( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t 
 
 	ctrl.bmRequestType = 0xc0;
 	ctrl.bRequest = 0x11;
-	ctrl.wValue = 0;
-	ctrl.wIndex = 0;
+	ctrl.wValue = 0x0000;
+	ctrl.wIndex = 0x0000;
 	ctrl.wLength = 0x04;
 
 	// rc = send_ctrl_xfr( devh, &ctrl, (unsigned char *)&data_4 );
 
-	send_ctrl_setup( dev, &ctrl, NULL );
+	rc = send_ctrl_setup( dev, &ctrl, (unsigned char*)&data_4 );
+
+/*
+	0x0000142c	test    eax, eax
+	0x0000142e	jne	0x1692
+*/
+
+	if ( rc != 0 )
+	{
+		return 0;
+	}
+
+	// printf("ans: 0x%08x\n", data_4);
 
 //	if ( rc != 0 )
 //		return 0;
@@ -131,12 +141,14 @@ uint32_t hwGetRate ( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t 
 //	rc = Usb_vendor_device_request();
 	ctrl.bmRequestType = 0xc0;
 	ctrl.bRequest = 0x10;
-	ctrl.wValue = 0;
-	ctrl.wIndex = 0;
+	ctrl.wValue = 0x0000;
+	ctrl.wIndex = 0x0000;
 	ctrl.wLength = 0x04;
 
 	// rc = send_ctrl_xfr( devh, &ctrl, (unsigned char *)&data_5 );
-	send_ctrl_setup( dev, &ctrl, NULL );
+	send_ctrl_setup( dev, &ctrl, (unsigned char*)&data_5 );
+
+	// printf("ans: 0x%08x\n", data_5);
 
 
 /*

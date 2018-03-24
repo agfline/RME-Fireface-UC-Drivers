@@ -8,22 +8,35 @@
 
 int do_send_ctrl_setup_trace( libusb_device_handle *dev, ctrl_setup *ctrl, unsigned char *data, const char *caller_name )
 {
-    fprintf( stdout, " tx (URB_CONTROL)  >   0x%02x  %02u (0x%02x)  0x%04x  0x%04x  0x%04x   |   %s()\n",
+    int rc = -1;
+
+    if ( dev != NULL )
+    {
+        rc = do_send_ctrl_setup( dev, ctrl, data );
+    }
+
+    // printf("ans: 0x%08x\n", data_4);
+
+    char rx_data[256];
+    rx_data[0] = 0x00;
+
+    if ( data != NULL )
+    {
+        snprintf( rx_data, 256, ">   rx_data : 0x%0*x",
+            ctrl->wLength * 2,
+            *data );
+    }
+
+    fprintf( stdout, " tx (URB_CONTROL)  >   0x%02x  %02u (0x%02x)  0x%04x  0x%04x  0x%04x   |   %s()   %s\n",
          ctrl->bmRequestType,
          ctrl->bRequest,
          ctrl->bRequest,
          ctrl->wValue,
          ctrl->wIndex,
          ctrl->wLength,
-         caller_name
+         caller_name,
+         rx_data
       );
-
-    int rc = 0;
-
-    if ( dev != NULL )
-    {
-        do_send_ctrl_setup( dev, ctrl, data );
-    }
 
     return rc;
 }
@@ -50,7 +63,7 @@ int do_send_ctrl_setup( libusb_device_handle *dev, ctrl_setup *ctrl, unsigned ch
 			 __func__,
 			 libusb_error_name( rc ) );
 
-		exit( rc );
+		// exit( rc );
 	}
 
 	return rc;

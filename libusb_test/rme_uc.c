@@ -243,11 +243,14 @@ static int send_iso_out(uint8_t ep)
 	int buf_len = 0;
 	int pcm_len = 0;
 
-	if ( tx_lt_cnt == 9 ) {
+	if ( tx_lt_cnt == 9 )
+	{
 		buf_len = 3420;
 		pcm_len = 180;
 		tx_lt_cnt  = 0;
-	} else {
+	}
+	else
+	{
 		buf_len = 3344;
 		pcm_len = 176;
 		tx_lt_cnt++;
@@ -286,6 +289,7 @@ static int send_iso_out(uint8_t ep)
 	if ( read( 0, pcm, pcm_len ) == 0 ) {
 		printf("*** EOF ***\n");
 		do_exit = 1;
+		return 1;
 	}
 
 /*
@@ -433,13 +437,14 @@ static int send_iso_out(uint8_t ep)
 // 		num_xfer, num_bytes, diff_msec, (num_bytes*1000)/diff_msec);
 // }
 
-static void sig_hdlr(int signum)
+static void sig_hdlr( int signum )
 {
-	switch (signum) {
-	case SIGINT:
-//		measure();
-		do_exit = 1;
-		break;
+	switch ( signum )
+	{
+		case SIGINT:
+//			measure();
+			do_exit = 1;
+			break;
 	}
 }
 
@@ -470,7 +475,7 @@ int main( int argc, char **argv )
 	devh = libusb_open_device_with_vid_pid(NULL, 0x0424, 0x3fc6);
 
 	if (!devh) {
-		fprintf(stderr, "Error finding USB device\n");
+		fprintf(stderr, "Error finding USB device : Running Offline\n");
 		// goto out;
 	}
 
@@ -486,6 +491,7 @@ int main( int argc, char **argv )
 
 	if ( devh )
 		libusb_set_interface_alt_setting( devh, rc, 1 );
+
 
 
 	/*
@@ -506,79 +512,21 @@ int main( int argc, char **argv )
 	hwInitHardware( devh );
 
 
-	// TODO: TEST
-	hwGetRate( devh, 0 );
 
-	// TODO: TEST
-	hwGetIsoModeFlag( devh );
+	/*
+		Get Sample Rate
+	*/
+
+	int rate = hwGetRate( devh, 1 );
+
+	printf("Sample Rate : %d\n", rate);
+
+
 
 
 	goto out;
 
-
-
-
 	goto SEND_AUDIO;
-
-//	printf("Setting interface to 1\n");
-
-//	ctrl.bmRequestType = 0x01;
-//	ctrl.bRequest  = 0x0b;
-//	ctrl.wValue  = 0x0001;
-//	ctrl.wIndex  = 0x0000;
-//	ctrl.wLength = 0x0000;
-
-//	send_ctrl_setup( devh, &ctrl, NULL );
-
-
-	/*
-		Get Hardware Revision (Firmware Version)
-	*/
-
-	// uint32_t rev = 0;
-
-	hwGetRevision( devh, &rev );
-	printf("Firmware Version : %d (0x%02x)\n", rev, rev);
-
-
-
-	ctrl_setup ctrl;
-
-	/*
-		call hwInitHarware()
-	*/
-
-	printf("hwInitHardware()\n");
-
-	ctrl.bmRequestType = 0x40;
-	ctrl.bRequest  = 0x16;
-	ctrl.wValue  = 0x0001;
-	ctrl.wIndex  = 0x0000;
-	ctrl.wLength = 0x0000;
-
-	uint16_t i = 0;
-
-	while ( i < 18 ) {
-
-		ctrl.wIndex = i;
-		send_ctrl_setup( devh, &ctrl, NULL );
-
-		ctrl.wIndex = i + 0x20;
-		send_ctrl_setup( devh, &ctrl, NULL );
-
-		i++;
-	}
-
-	ctrl.bRequest = 0x10;
-	ctrl.wValue = 0x0800;
-	ctrl.wIndex = 0xb800;
-	send_ctrl_setup( devh, &ctrl, NULL );
-
-	ctrl.bRequest = 0x20;
-	ctrl.wValue = 0x0001;
-	ctrl.wIndex = 0x0000;
-	send_ctrl_setup( devh, &ctrl, NULL );
-
 
 
 	/*
