@@ -19,20 +19,6 @@ This should be tested and verified with TotalmixFX and wireshark.
                 The second is the application of the user values from TotalMix. These are sent only if they are different from the "init".
                 Nice guess, dude.
 
-## Once iface's up
-
-* 6 x UNKNOWN CTRL SETUP Packets @ pckn° 1602
-```
-0x40 : 23 (0x17)
-```
-
-* 54, 196, 198 x UNKNOWN CTRL SETUP Packets @ pckn° 1650, answered 0x04000000
-```
-0xc0 : 25 (0x19) Found in CHardware::LoadSettings() from Fireface USB Settings
-                 Found in CCardIOBFo::ReadBuffer(unsigned int*, int*)
-```
-
-
 
 
 ## Notes
@@ -49,6 +35,7 @@ This should be tested and verified with TotalmixFX and wireshark.
 0x40 : 21 (0x15)  |  Set Loopback on output
 0x40 : 22 (0x16)  |  UNKNOWN - sent by hwInitHardware() from FirefaceUSB.kext
 0x40 : 23 (0x17)  |  Set +48v / PAD / Hi-Z
+0xc0 : 25 (0x19)  |  UNKNOWN - de_RME_driver_USBAudioUserClient::sUserClientReadStatus() from FirefaceUSB.kext
 0x40 : 26 (0x1a)  |  Always from hwWriteLedAndPga() function (Gain, output vol)
 0x40 : 27 (0x1b)  |  Set Sample Rate (pkt 1/2)
 0xc0 : 28 (0x1c)  |  Get firmware version

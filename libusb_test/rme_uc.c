@@ -523,6 +523,19 @@ int main( int argc, char **argv )
 
 
 
+	/*
+		Get Status
+	*/
+
+	uint32_t status = 0;
+
+	sUserClientReadStatus( devh, &status );
+
+	printf("Status : %u\n", status);
+
+
+
+
 
 	goto out;
 
