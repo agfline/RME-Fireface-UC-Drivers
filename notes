@@ -3,11 +3,6 @@
 de_RME_driver_USBAudioEngine::initHardware()
 
 
-
-de_RME_driver_USBAudioUserClient::sUserClientWriteSettings()
-    - is probably the function called from user-space TotalMix when changing card settings 0x40 0x17
-
-
 de_RME_driver_USBAudioUserClient::sUserClientSetRecordOut()
     - Calls Usb_vendor_device_request()
 
@@ -33,3 +28,18 @@ Usb_vendor_device_request() sends packets thanks to IOUSBDevice+0x938
 
 TODO: CHardware::GetStatus() from Fireface USB Settings
       Might be some info about iface states : sync, etc.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+kern_return_t IOConnectCallStructMethod(mach_port_t connection, uint32_t selector, const void *inputStruct, size_t inputStructCnt, void *outputStruct, size_t *outputStructCnt);

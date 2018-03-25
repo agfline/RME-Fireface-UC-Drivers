@@ -21,7 +21,7 @@ This should be tested and verified with TotalmixFX and wireshark.
 
 
 
-## Notes
+## Control Transfer Packets
 
 ```
 0x40 : 16 (0x10)  |  Set Sample Rate (pkt 2/2)
@@ -41,3 +41,18 @@ This should be tested and verified with TotalmixFX and wireshark.
 0xc0 : 28 (0x1c)  |  Get firmware version
 0x40 : 32 (0x20)  |  UNKNOWN - sent by hwInitHardware() from FirefaceUSB.kext
 ```
+
+
+## Séquences
+
+Observations avec Wireshark.
+
+### Initialisation
+
+* on récupère la version du firmware : hwGetRevision()
+**TODO**
+
+### Lecture
+
+Toutes les 2ms : intéroge l'interface sur sa fréquence d'échantillonnage **hwGetRate()**
+**TODO**

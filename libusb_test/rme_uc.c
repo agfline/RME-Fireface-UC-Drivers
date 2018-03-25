@@ -525,6 +525,7 @@ int main( int argc, char **argv )
 
 	/*
 		Get Status
+		TODO: Test with RME UC
 	*/
 
 	uint32_t status = 0;

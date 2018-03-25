@@ -171,6 +171,8 @@ out AD___8     1009
 **TODO** : find function in TotalmixFX
 **TODO** : Init -> default values ? user values ? must be user values.
 
+* CCardIOUC::SetLoopbackChannel()
+
 La fonction Loopback permet de router le signal présent sur une sortie vers l'entrée correspondante.
 
 Le Loopback de chaque sortie est définit lors de l'initialisation de l'interface, juste après l'initialisation des "faders".
