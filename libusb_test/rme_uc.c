@@ -533,13 +533,16 @@ int main( int argc, char **argv )
 
 SEND_AUDIO:
 
+	/*
+		Set Sample Rate
+	*/
 
 	hwSetSampleRate( devh, 44100 );
 
 
 
 	/*
-		Get Sample Rate
+		Check Sample Rate was correctly set
 	*/
 
 	rate = hwGetRate( devh, 1 );
@@ -548,8 +551,13 @@ SEND_AUDIO:
 
 
 
+	/*
+		unMute Channels
+	*/
 
-	hwMuteChannels( devh, 1 );	// unmute channels
+	hwMuteChannels( devh, 1 );
+
+
 
 
 
@@ -600,6 +608,11 @@ SEND_AUDIO:
 	{
 		printf( "LIBUSB ERROR (%d) : %s\n", rc, libusb_error_name( rc ) );
 	}
+
+
+	/*
+		Mute Channels
+	*/
 
 	hwMuteChannels( devh, 0 );
 

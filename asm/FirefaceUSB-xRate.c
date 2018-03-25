@@ -3,7 +3,7 @@
 // SAME AS DEV
 
 /*
- *	For any given real rate, xRate() returns the closest exact rate.
+ *	For any given value, xRate() returns the closest exact rate.
  */
 
 uint32_t xRate( uint32_t edi )
