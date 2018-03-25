@@ -63,10 +63,15 @@ int do_send_ctrl_setup( libusb_device_handle *dev, ctrl_setup *ctrl, unsigned ch
 			 __func__,
 			 libusb_error_name( rc ) );
 
-		// exit( rc );
+        return rc;
 	}
 
-	return rc;
+    /*
+        this should simulate the reverse engineered bahavior (see hwGetRate())
+        which seems to return zero on success instead of the number of byte transfered
+     */
+     
+    return 0;
 }
 
 

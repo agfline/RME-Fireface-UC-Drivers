@@ -53,6 +53,8 @@ int hwSetSampleRate ( libusb_device_handle *dev, /*uint32_t productId,*/ uint32_
 */
 	uint32_t rate = xRate( rateValue );
 
+	printf("xRate : %d\n", rate);
+
 	uint32_t flag = 0;			// si, esi
 	uint32_t p2_wValue = 0;		// r12d
 	uint16_t p2_wIndex = 0;		// r13w
@@ -159,6 +161,7 @@ int hwSetSampleRate ( libusb_device_handle *dev, /*uint32_t productId,*/ uint32_
 		0x00001b92	mov	r12d, 0x10
 		0x00001b98	jmp	0x1bab			; end of else / if
 */
+		printf("44100 des familles\n");
 		flag = 0x1;
 		p2_wValue = 0x10;
 /*

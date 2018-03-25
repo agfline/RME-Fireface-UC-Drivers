@@ -109,7 +109,7 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 	0x0000142c	test    eax, eax
 	0x0000142e	jne	0x1692
 */
-
+	/* TODO: Test is unclear: should send_ctrl_setup() return error code or length ? */
 	if ( rc != 0 )
 	{
 		return 0;

@@ -26,7 +26,7 @@ uint32_t xRate( uint32_t edi )
 	0x00001aae	cmp	edi, 0x94a1
 	0x00001ab4	ja	0x1abd
 */
-	if ( edi <= 0x94a1 ) {
+	if ( edi <= 0x94a1 ) { /* 38049 */
 /*
 		0x00001ab6	mov	eax, 0x7d00
 		0x00001abb	jmp	0x1b2a
@@ -37,7 +37,7 @@ uint32_t xRate( uint32_t edi )
 	0x00001abd	cmp	edi, 0xb3b7
 	0x00001ac3	ja	0x1acc
 */
-	if ( edi <= 0x1acc ) {
+	if ( edi <= 0xb3b7 ) { /* prev 0x1acc */
 /*
 		0x00001ac5	mov	eax, 0xac44
 		0x00001aca	jmp	0x1b2a
