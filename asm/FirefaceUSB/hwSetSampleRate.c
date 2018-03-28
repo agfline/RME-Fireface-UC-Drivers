@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 #include "../libusb_test/usb.h"
-#include "../libusb_test/FirefaceUSB.h"
+#include "../libusb_test/asm.h"	// xRate()
 
 
 int hwSetSampleRate ( libusb_device_handle *dev, /*uint32_t productId,*/ uint32_t rateValue )

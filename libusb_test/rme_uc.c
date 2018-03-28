@@ -11,11 +11,11 @@
 
 #include "rme_uc.h"
 #include "usb.h"
-#include "FirefaceUSB.h"
+#include "asm.h"
 
 
 
-#define EP_ISO_OUT	0x01	/* mod */
+#define EP_ISO_OUT	0x01
 
 static int do_exit = 0;
 static struct libusb_device_handle *devh = NULL;

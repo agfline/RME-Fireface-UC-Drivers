@@ -192,9 +192,9 @@ wLength          : 0x0000
 
 **TODO** : ok
 
-* **[CCardIOUC::SetGain()](./asm/TotalmixFX-CCardIOUC::SetGain.c)**
-* **[de_RME_driver_USBAudioUserClient::sUserClientWriteVolume()](./asm/FirefaceUSB-de_RME_driver_USBAudioUserClient::sUserClientWriteVolume.c)**
-* **[Usb_vendor_device_request()](./asm/FirefaceUSB-Usb_vendor_device_request.c)**
+* **[CCardIOUC::SetGain()](./asm/TotalmixFX/CCardIOUC::SetGain.c)**
+* **[de_RME_driver_USBAudioUserClient::sUserClientWriteVolume()](./asm/FirefaceUSB/de_RME_driver_USBAudioUserClient::sUserClientWriteVolume.c)**
+* **[Usb_vendor_device_request()](./asm/FirefaceUSB/Usb_vendor_device_request.c)**
 
 ```
 Control Transfer : 0x00
@@ -211,9 +211,9 @@ wLength          : 0x0000
 
 **TODO** : Trouver qui appelle qui, quand et comment.
 
-* **[CCardIOUC::SetGain()](./asm/TotalmixFX-CCardIOUC::SetGain.c)**
-* **[de_RME_driver_USBAudioUserClient::sUserClientWriteVolume()](./asm/FirefaceUSB-de_RME_driver_USBAudioUserClient::sUserClientWriteVolume.c)**
-* **[Usb_vendor_device_request()](./asm/FirefaceUSB-Usb_vendor_device_request.c)**
+* **[CCardIOUC::SetGain()](./asm/TotalmixFX/CCardIOUC::SetGain.c)**
+* **[de_RME_driver_USBAudioUserClient::sUserClientWriteVolume()](./asm/FirefaceUSB/de_RME_driver_USBAudioUserClient::sUserClientWriteVolume.c)**
+* **[Usb_vendor_device_request()](./asm/FirefaceUSB/Usb_vendor_device_request.c)**
 
 ```
 Control Transfer : 0x00
@@ -225,7 +225,7 @@ wIndex           : channelID (992 - 1009)
 wLength          : 0x0000
 ```
 
-* **[hwWriteLedAndPga()](./asm/FirefaceUSB-hwWriteLedAndPga.c)**
+* **[hwWriteLedAndPga()](./asm/FirefaceUSB/hwWriteLedAndPga.c)**
 
 Ce transfert accepte comme valeurs de volume `[0x3f (-inf); 0x00 (+6)]` pour un total de 64 valeurs.
 
@@ -248,7 +248,7 @@ Les deux transferts ont un effet sur le niveau de sorti, seul le second modifie 
 
 **TODO** : Trouver l'appellant dans TotalMix
 
-* **[hwWriteLedAndPga()](./asm/FirefaceUSB-hwWriteLedAndPga.c)**
+* **[hwWriteLedAndPga()](./asm/FirefaceUSB/hwWriteLedAndPga.c)**
 
 Les entrées 1 à 4 disposent d'un réglage de gain.
 
@@ -272,9 +272,9 @@ wLength          : 0x0000
 
 **TODO** : ok
 
-* **[CCardIOUC::WriteDWORD()](./asm/TotalmixFX-CCardIOUC::WriteDWORD.c)**
-* **[de_RME_driver_USBAudioUserClient::sUserClientWriteSettings()](./asm/FirefaceUSB-de_RME_driver_USBAudioUserClient::sUserClientWriteSettings.c)**
-* **[Usb_vendor_device_request()](./asm/FirefaceUSB-Usb_vendor_device_request.c)**
+* **[CCardIOUC::WriteDWORD()](./asm/TotalmixFX/CCardIOUC::WriteDWORD.c)**
+* **[de_RME_driver_USBAudioUserClient::sUserClientWriteSettings()](./asm/FirefaceUSB/de_RME_driver_USBAudioUserClient::sUserClientWriteSettings.c)**
+* **[Usb_vendor_device_request()](./asm/FirefaceUSB/Usb_vendor_device_request.c)**
 
 S'applique uniquement aux entrées 1 et 2.
 
@@ -307,9 +307,9 @@ wLength          : 0x0000
 
 **TODO** : en fonction d'un élément inconnu, *wValue* peut prendre 0x8008 ou 0x4004. Cependant jamais observé avec Wireshark.
 
-* **[CCardIOUC::WriteDWORD()](./asm/TotalmixFX-CCardIOUC::WriteDWORD.c)**
-* **[de_RME_driver_USBAudioUserClient::sUserClientWriteSettings()](./asm/FirefaceUSB-de_RME_driver_USBAudioUserClient::sUserClientWriteSettings.c)**
-* **[Usb_vendor_device_request()](./asm/FirefaceUSB-Usb_vendor_device_request.c)**
+* **[CCardIOUC::WriteDWORD()](./asm/TotalmixFX/CCardIOUC::WriteDWORD.c)**
+* **[de_RME_driver_USBAudioUserClient::sUserClientWriteSettings()](./asm/FirefaceUSB/de_RME_driver_USBAudioUserClient::sUserClientWriteSettings.c)**
+* **[Usb_vendor_device_request()](./asm/FirefaceUSB/Usb_vendor_device_request.c)**
 
 S'applique uniquement aux entrées 3 et 4.
 
@@ -342,9 +342,9 @@ wLength          : 0x0000
 
 **TODO** : ok
 
-* **[CCardIOUC::WriteDWORD()](./asm/TotalmixFX-CCardIOUC::WriteDWORD.c)**
-* **[de_RME_driver_USBAudioUserClient::sUserClientWriteSettings()](./asm/FirefaceUSB-de_RME_driver_USBAudioUserClient::sUserClientWriteSettings.c)**
-* **[Usb_vendor_device_request()](./asm/FirefaceUSB-Usb_vendor_device_request.c)**
+* **[CCardIOUC::WriteDWORD()](./asm/TotalmixFX/CCardIOUC::WriteDWORD.c)**
+* **[de_RME_driver_USBAudioUserClient::sUserClientWriteSettings()](./asm/FirefaceUSB/de_RME_driver_USBAudioUserClient::sUserClientWriteSettings.c)**
+* **[Usb_vendor_device_request()](./asm/FirefaceUSB/Usb_vendor_device_request.c)**
 
 S'applique uniquement aux entrées 3 et 4.
 
@@ -377,7 +377,7 @@ wLength          : 0x0000
 
 **TODO** : ok
 
-* **[hwMuteChannels()](./asm/FirefaceUSB-hwMuteChannels.c)**
+* **[hwMuteChannels()](./asm/FirefaceUSB/hwMuteChannels.c)**
 
 Cette fonction permet un **mute hardware de l'ensemble des sorties**.
 
@@ -398,11 +398,38 @@ wLength          : 0x0000
 ```
 
 
+### Get Sample Rate
+
+**TODO** : ok
+
+* **[hwGetRate()](./asm/FirefaceUSB/hwGetRate.c)**
+
+```
+Control Transfer : 0x00
+============================
+bmRequestType    : 0xc0
+bRequest         : 0x11 (17)
+wValue           : 0x0000
+wIndex           : 0x0000
+wLength          : 0x0004
+```
+
+```
+Control Transfer : 0x00
+============================
+bmRequestType    : 0xc0
+bRequest         : 0x10 (16)
+wValue           : 0x0000
+wIndex           : 0x0000
+wLength          : 0x0004
+```
+
+
 ### Set Sample Rate
 
 **TODO** : ok
 
-* **[hwSetSampleRate()](./asm/FirefaceUSB-hwSetSampleRate.c)**
+* **[hwSetSampleRate()](./asm/FirefaceUSB/hwSetSampleRate.c)**
 
 Les deux transferts sont envoyés dans cet ordre. Ils peuvent être si besoin précédés d'un changement de configuration sur l'interface USB 0 (*bAlternateSetting*), voir la section **Audio**.
 
@@ -437,7 +464,7 @@ Les settings font l'objet d'une catégorie à part pour plusieurs raisons.
 
 D'abord, il s'agit de l'ensemble des paramètres que l'on trouve dans le programme **Fireface USB Settings**, et ils ont ceci en commun que lorsqu'on modifie un paramètre, l'ensemble des paramètres est transmis par deux transferts, dans les champs *wValue* sous forme de bit flags.
 
-Ces transferts proviennent de la fonction **[hwWriteSettings_uc()](./asm/Fireface_USB_Settings-hwWriteSettings_uc.c)**.
+Ces transferts proviennent de la fonction **[hwWriteSettings_uc()](./asm/FirefaceUSBSettings/hwWriteSettings_uc.c)**.
 
 *Le premier transfert concerne les **niveaux d'entrées** et de **sorties**.*
 
@@ -554,8 +581,8 @@ ADAT     |  0
 
 **TODO** : ok
 
-* **[hwGetRevision()](./asm/FirefaceUSB-hwGetRevision.c)**
-* **[Usb_vendor_device_request()](./asm/FirefaceUSB-Usb_vendor_device_request.c)**
+* **[hwGetRevision()](./asm/FirefaceUSB/hwGetRevision.c)**
+* **[Usb_vendor_device_request()](./asm/FirefaceUSB/Usb_vendor_device_request.c)**
 
 ```
 Control Transfer : 0x00
@@ -570,12 +597,6 @@ wLength          : 0x0004
 ```
 version = (uint32_t)answer >> 0x10
 ```
-
-
-#### Get Sample Rate
-
-**TODO**
-
 
 #### Get Current Clock
 

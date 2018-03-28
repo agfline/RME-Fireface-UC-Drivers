@@ -1,9 +1,13 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "../libusb_test/usb.h"
 
+/*
+	0x3fc6 (Fireface UC) begins @ line 580
+*/
 
 uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /*dx*/ unknownArg )
 {
@@ -34,20 +38,528 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 */
 
 
+/*
+	0x0000110d	lea	eax, qword [ds:rsi+0xffffffffffffc036]
+	0x00001113	cmp	ax, 0x3
+	0x00001117	mov	bx, dx
+	0x0000111a	mov	r14, rdi
+	0x0000111d	jb	0x112f
+
+	0x0000111f	mov	r15w, si
+	0x00001123	cmp	r15w, 0x3fc3
+	0x00001129	jne	0x1238
+
+*/
+	// uint16_t bx  =  dx;
+//	uint64_t r14 = rdi;
+
+	// uint16_t r15w = productId;
+
+
+	if ( ((uint32_t)(productId + 0xffffffffffffc036) <  0x3) || (productId == 0x3fc3) )	/* 0x3fc6 false */
+	{
 
 /*
-	...
+		0x0000112f	lea	r15, qword [ss:rbp+var_28]	; XREF 1
+		0x00001133	mov	qword [ss:rsp+0x8], r15	   ; argument #8 (wLenDone)      for method
+		0x00001138	mov	dword [ss:rsp], 0x1	   ; argument #7 (bmRequestType) for method
+		0x0000113f	mov	esi, 0x11		   ; argument #2 (bRequest)      for method
+		0x00001144	xor	edx, edx		   ; argument #3 (wValue)        for method
+		0x00001146	lea	r8, qword [ss:rbp+var_38]  ; argument #5 (pData*)        for method
+		0x0000114a	mov	r9d, 0x10		   ; argument #6 (wLength)       for method
+		0x00001150	mov	rdi, r14		   ; argument #1 (IOUSBDevice*)  for method
+		0x00001153	xor	ecx, ecx		   ; argument #4 (wIndex)        for method
+		0x00001155	call	Usb_vendor_device_request()
+		0x0000115a	test	eax, eax
+		0x0000115c	jne	0x1692
 */
+		unsigned char data_1[16];	// rbp+var_38
+		memset( data_1, 0x00, 16 ); // calm down GCC
+
+		// uint32_t num_tx_bytes_1 = 0;
+
+		// 0xc0 0x11 (17) 0x0000 0x0000 0x10
+//		rc = Usb_vendor_device_request();
+
+		if ( rc != 0 )
+			return 0;
+/*
+		0x00001162	mov	eax, dword [ss:rbp+var_38]
+		0x00001165	shr	eax, 0xa
+		0x00001168	and	eax, 0x7
+		0x0000116b	lea	ecx, qword [ds:rax+0xffffffffffffffff]
+		0x0000116e	cmp	ecx, 0x5
+		0x00001171	jb	0x117c
+
+		0x00001173	test	bx, bx
+		0x00001176	je	0x1692
+*/
+		eax  = (*(uint32_t *)data_1) >> 0xa;
+		eax &= 0x7;
+
+		if ( (uint32_t)(eax + 0xffffffffffffffff) >= 0x5 && unknownArg == 0 )
+		{
+			return 0;
+		}
+
+/*
+		0x0000117c	cmp	eax, 0x1			; XREF 1
+		0x0000117f	je	0x11bd
+*/
+		if ( eax == 1 ) {
+/*
+			0x000011bd	test	byte [ss:rbp+var_2C], 0x80	; XREF 1
+			0x000011c1	jne	0x11e6
+*/
+			if ( *(data_1 + 12) == 0x80 ) {
+/*
+				0x000011c3	mov	r14d, dword [ss:rbp+var_34]
+				0x000011c7	and	r14d, 0xf
+				0x000011cb	cmp	r14d, 0xb
+				0x000011cf	ja	0x1692
+*/
+				if ( ((*(uint32_t *)(data_1 + 4)) & 0xf) > 0xb )
+					return 0;
+/*
+				0x000011d5	lea	r15, qword [ds:0x16cc]
+				0x000011dc	movsxd	r14, dword [ds:r15+r14*4]
+				0x000011e0	add	r14, r15			; XREF 2
+				0x000011e3	jmp	r14		; switch statement with 12 cases
+*/
+
+//				switch ( /*TODO*/ )	return ?
+			} else {
+/*
+				// TODO
+*/
+			}
+
+/*
+		0x00001181	cmp	eax, 0x2
+		0x00001184	jne	0x11e6
+*/
+		} else if ( eax == 0x2 ) {
+			// THAT PART ALWAYS RETURN
+/*
+			0x00001186	mov	r14d, dword [ss:rbp+var_34]
+			0x0000118a	shr	r14d, 0x4
+			0x0000118e	and	r14d, 0xf
+			0x00001192	cmp	r14d, 0xb
+			0x00001196	ja	0x1692
+*/
+			if ( ((*(uint32_t*)(data_1 + 4) >> 0x4) & 0xf) > 0xb )
+				return 0;
+/*
+			0x0000119c	lea	r15, qword [ds:0x169c]
+			0x000011a3	movsxd	r14, dword [ds:r15+r14*4]
+			0x000011a7	add	r14, r15
+			0x000011aa	jmp	r14			; switch statement with 12 cases
+*/
+
+//			switch ( /*TODO*/ )	return ?;
+
+		}
+/*
+;		0x000011ad	mov	eax, 0xac44			; case 1, XREF 10
+
+;		0x000011b2	add	rsp, 0x68			; XREF 11
+;		0x000011b6	pop	rbx
+;		0x000011b7	pop	r14
+;		0x000011b9	pop	r15
+;		0x000011bb	pop	rbp
+;		0x000011bc	ret
+
+;		0x000011bd	test	byte [ss:rbp+var_2C], 0x80	; XREF 1
+;		0x000011c1	jne	0x11e6
+
+;		0x000011c3	mov	r14d, dword [ss:rbp+var_34]
+;		0x000011c7	and	r14d, 0xf
+;		0x000011cb	cmp	r14d, 0xb
+;		0x000011cf	ja	0x1692
+
+;		0x000011d5	lea	r15, qword [ds:0x16cc]
+;		0x000011dc	movsxd	r14, dword [ds:r15+r14*4]
+;		0x000011e0	add	r14, r15			; XREF 2
+;		0x000011e3	jmp	r14				; switch statement with 12 cases
+*/
+
+/*
+		0x000011e6	mov	ecx, dword [ss:rbp+var_34]	; XREF 2
+
+		0x000011e9	mov	eax, ecx			; XREF 1
+		0x000011eb	and	eax, 0x300000
+		0x000011f0	cmp	eax, 0xfffff
+		0x000011f5	jg	0x1202
+*/
+		ecx = *(uint32_t*)(data_1 + 4);
+		eax = ecx & 0x300000;
+
+		if ( eax <= 0xfffff ) {
+/*
+			0x000011f7	test	eax, eax
+			0x000011f9	jne	0x121b
+*/
+			if ( eax != 0 ) {
+				// THAT PART ALWAYS RETURN
+/*
+				0x0000121b	xor	eax, eax	; XREF 1
+				0x0000121d	jmp	0x1224
+
+				0x00001224	test	ecx, 0x800000	; XREF 3
+				0x0000122a	je	0x13f9
+*/
+				eax = 0;
+
+				if ( ecx == 0x800000 ) {
+/*
+					0x000013f9	shr	ecx, 0x16	; XREF 1
+					0x000013fc	jmp	0x133e
+
+					0x0000133e	and	cl, 0x1		; XREF 3
+					0x00001341	shl	eax, cl
+					0x00001343	jmp	0x11b2
+*/
+					ecx >>= 0x16;
+					ecx &= 0x1;
+					eax <<= ecx;
+
+					return eax;
+				}
+/*
+				0x00001230	shl	eax, 0x2	; XREF 3
+				0x00001233	jmp	0x11b2
+*/
+				return eax << 0x2;
+			} else {
+				// THAT PART ALWAYS RETURN
+/*
+				0x000011fb	mov	eax, 0x7d00
+				0x00001200	jmp	0x1224
+*/
+				eax = 0x7d00;
+/*
+				0x00001224	test	ecx, 0x800000		; XREF 3
+				0x0000122a	je	0x13f9
+*/
+				if ( ecx == 0x800000 ) {
+/*
+					0x000013f9	shr	ecx, 0x16	; XREF 1
+					0x000013fc	jmp	0x133e
+
+					0x0000133e	and	cl, 0x1		; XREF 3
+					0x00001341	shl	eax, cl
+					0x00001343	jmp	0x11b2
+*/
+					ecx >>= 0x16;
+					ecx &= 0x1;
+					eax <<= ecx;
+
+					return eax;
+				}
+/*
+				0x00001230	shl	eax, 0x2	; XREF 3
+				0x00001233	jmp	0x11b2
+*/
+				return eax << 0x2;
+			}
+		}
+/*
+		0x00001202	cmp	eax, 0x100000			; XREF 1
+		0x00001207	je	0x13ef
+*/
+		if ( eax == 0x100000 ) {
+			// THAT PART ALWAYS RETURN
+/*
+			0x000013ef	mov	eax, 0xac44		; XREF 1
+			0x000013f4	jmp	0x1224
+*/
+			eax = 0xac44;
+/*
+			0x00001224	test	ecx, 0x800000		; XREF 3
+			0x0000122a	je	0x13f9
+*/
+			if ( ecx == 0x800000 ) {
+/*
+				0x000013f9	shr	ecx, 0x16	; XREF 1
+				0x000013fc	jmp	0x133e
+
+				0x0000133e	and	cl, 0x1		; XREF 3
+				0x00001341	shl	eax, cl
+				0x00001343	jmp	0x11b2
+*/
+				ecx >>= 0x16;
+				ecx &= 0x1;
+				eax <<= ecx;
+
+				return eax;
+			}
+/*
+			0x00001230	shl	eax, 0x2		; XREF 3
+			0x00001233	jmp	0x11b2
+*/
+			return eax << 0x2;
+		}
+/*
+		0x0000120d	cmp	eax, 0x200000
+		0x00001212	je	0x121f
+
+		0x00001214	cmp	eax, 0x300000
+		0x00001219	je	0x121f
+*/
+		if ( eax == 0x200000 || eax == 0x300000 ) {
+			// THAT PART ALWAYS RETURN
+/*
+			0x0000121f	mov	eax, 0xbb80		; XREF 2
+
+			0x00001224	test	ecx, 0x800000		; XREF 3
+			0x0000122a	je	0x13f9
+*/
+			eax = 0xbb80;
+
+			if ( (ecx & 0x800000) == 0 ) {
+/*
+				0x000013f9	shr	ecx, 0x16	; XREF 1
+				0x000013fc	jmp	0x133e
+*/
+				ecx >>= 0x16;
+/*
+				0x0000133e	and	cl, 0x1		; XREF 3
+				0x00001341	shl	eax, cl
+				0x00001343	jmp	0x11b2
+*/
+				ecx &= 0x1;
+				eax <<= ecx;
+				return eax;
+			}
+/*
+			0x00001230	shl	eax, 0x2		; XREF 3
+			0x00001233	jmp	0x11b2
+*/
+			eax <<= 0x2;
+			return eax;
+		}
+/*
+		0x0000121b	xor	eax, eax			; XREF 1
+		0x0000121d	jmp	0x1224
+
+		0x00001224	test	ecx, 0x800000		; XREF 3
+		0x0000122a	je	0x13f9
+*/
+		eax = 0;
+
+		if ( ecx == 0x800000 ) {
+/*
+			0x000013f9	shr	ecx, 0x16	; XREF 1
+			0x000013fc	jmp	0x133e
+
+			0x0000133e	and	cl, 0x1		; XREF 3
+			0x00001341	shl	eax, cl
+			0x00001343	jmp	0x11b2
+*/
+			ecx >>= 0x16;
+			ecx &= 0x1;
+			eax <<= ecx;
+
+			return eax;
+		}
+/*
+		0x00001230	shl	eax, 0x2		; XREF 3
+		0x00001233	jmp	0x11b2
+*/
+		return eax << 0x2;
+
+/*
+;		0x0000121f	mov	eax, 0xbb80			; XREF 2
+
+;		0x00001224	test	ecx, 0x800000			; XREF 3
+;		0x0000122a	je	0x13f9
+
+;		0x00001230	shl	eax, 0x2			; XREF 3
+;		0x00001233	jmp	0x11b2
+*/
+
+	}
+
+
+
+
+
+
+
 
 
 /*
-	...
-*/
+	0x00001238	mov	eax, r15d				; XREF 1
+	0x0000123b	add	eax, 0xffffc03f
+	0x00001240	cmp	ax, 0x2
+	0x00001244	jb	0x1252
 
+	0x00001246	cmp	r15w, 0x3fc4
+	0x0000124c	jne	0x1348
+*/
+	if ( (((productId + 0xffffc03f) & 0xffff) < 0x2) || (productId == 0x3fc4) )	/* 0x3fc6 false */
+	{
+/*
+	0x00001252	lea	r15, qword [ss:rbp+var_1C]		; XREF 1
+	0x00001256	mov	qword [ss:rsp+0x8], r15		; argument "var_18" for method
+	0x0000125b	mov	dword [ss:rsp], 0x1		; argument "var_10" for method
+	0x00001262	mov	esi, 0x11			; argument #2 for method
+	0x00001267	xor	edx, edx			; argument #3 for method
+	0x00001269	lea	r8, qword [ss:rbp+var_48]	; argument #5 for method
+	0x0000126d	mov	r9d, 0x10			; argument #6 for method
+	0x00001273	mov	rdi, r14			; argument #1 for method
+	0x00001276	xor	ecx, ecx			; argument #4 for method
+	0x00001278	call	Usb_vendor_device_request()
+	0x0000127d	test	eax, eax
+	0x0000127f	jne	0x1692
+
+	0x00001285	mov	eax, dword [ss:rbp+var_48]
+	0x00001288	shr	eax, 0xd
+	0x0000128b	and	eax, 0x7
+	0x0000128e	lea	ecx, qword [ds:rax+0xffffffffffffffff]
+	0x00001291	cmp	ecx, 0x6
+	0x00001294	jb	0x129f
+
+	0x00001296	test	bx, bx
+	0x00001299	je	0x1692
+
+	0x0000129f	cmp	eax, 0x1				; XREF=__Z9hwGetRateP11IOUSBDevicett+404
+	0x000012a2	je	0x12e8
+
+	0x000012a4	cmp	eax, 0x2
+	0x000012a7	je	0x12c1
+
+	0x000012a9	mov	ecx, dword [ss:rbp+var_3C]
+
+	0x000012ac	mov	eax, ecx				; XREF=__Z9hwGetRateP11IOUSBDevicett+494
+	0x000012ae	and	eax, 0x18
+	0x000012b1	cmp	eax, 0x7
+	0x000012b4	jg	0x1313
+
+	0x000012b6	test	eax, eax
+	0x000012b8	jne	0x1322
+
+	0x000012ba	mov	eax, 0x7d00
+	0x000012bf	jmp	0x1332
+
+	0x000012c1	mov	r14d, dword [ss:rbp+var_44]		; XREF=__Z9hwGetRateP11IOUSBDevicett+423
+	0x000012c5	shr	r14d, 0x4
+	0x000012c9	and	r14d, 0xf
+	0x000012cd	cmp	r14d, 0xb
+	0x000012d1	ja	0x1692
+
+	0x000012d7	lea	r15, qword [ds:0x16fc]
+	0x000012de	movsxd	r14, dword [ds:r15+r14*4]
+	0x000012e2	add	r14, r15
+	0x000012e5	jmp	r14					; switch statement using table at 0x16fc, with 12 cases
+
+	0x000012e8	mov	ecx, dword [ss:rbp+var_3C]		; XREF=__Z9hwGetRateP11IOUSBDevicett+418
+	0x000012eb	test	cl, 0x80
+	0x000012ee	jne	0x12ac
+
+	0x000012f0	mov	r14d, dword [ss:rbp+var_44]
+	0x000012f4	and	r14d, 0xf
+	0x000012f8	cmp	r14d, 0xb
+	0x000012fc	ja	0x1692
+
+	0x00001302	lea	r15, qword [ds:0x172c]
+	0x00001309	movsxd	r14, dword [ds:r15+r14*4]
+	0x0000130d	add	r14, r15
+	0x00001310	jmp	r14					; switch statement using table at 0x172c, with 12 cases
+
+	0x00001313	cmp	eax, 0x8				; XREF=__Z9hwGetRateP11IOUSBDevicett+436
+	0x00001316	je	0x1326
+
+	0x00001318	cmp	eax, 0x10
+	0x0000131b	je	0x132d
+
+	0x0000131d	cmp	eax, 0x18
+	0x00001320	je	0x132d
+
+	0x00001322	xor	eax, eax				; XREF=__Z9hwGetRateP11IOUSBDevicett+440
+	0x00001324	jmp	0x1332
+
+	0x00001326	mov	eax, 0xac44				; "Channels", XREF=__Z9hwGetRateP11IOUSBDevicett+534
+	0x0000132b	jmp	0x1332
+
+	0x0000132d	mov	eax, 0xbb80				; 0xbb80 (__ZL21gChannelNames_UCX_out + 0x50), XREF=__Z9hwGetRateP11IOUSBDevicett+539, __Z9hwGetRateP11IOUSBDevicett+544
+
+	0x00001332	test	cl, 0x40				; XREF=__Z9hwGetRateP11IOUSBDevicett+447, __Z9hwGetRateP11IOUSBDevicett+548, __Z9hwGetRateP11IOUSBDevicett+555
+	0x00001335	jne	0x1230
+
+	0x0000133b	shr	cl, 0x5
+
+	0x0000133e	and	cl, 0x1				; XREF 3
+	0x00001341	shl	eax, cl
+	0x00001343	jmp	0x11b2
+*/
+	}
+
+// x1348:
 
 /*
-	...
+	0x00001348	cmp	r15w, 0x3fa0				; XREF 1
+	0x0000134e	jne	0x1401
 */
+	if ( productId == 0x3fa0 ) /* 0x3fc6 false */
+	{
+/*
+	0x00001354	lea	r15, qword [ss:rbp+var_20]
+	0x00001358	mov	qword [ss:rsp+0x8], r15			; argument "var_18" for method
+	0x0000135d	mov	dword [ss:rsp], 0x1			; argument "var_10" for method
+	0x00001364	mov	esi, 0x11				; argument #2 for method
+	0x00001369	xor	edx, edx				; argument #3 for method
+	0x0000136b	lea	r8, qword [ss:rbp+var_58]		; argument #5 for method
+	0x0000136f	mov	r9d, 0x10				; argument #6 for method
+	0x00001375	mov	rdi, r14				; argument #1 for method
+	0x00001378	xor	ecx, ecx				; argument #4 for method
+	0x0000137a	call	Usb_vendor_device_request()
+	0x0000137f	test	eax, eax
+	0x00001381	jne	0x1692
+
+	0x00001387	mov	eax, dword [ss:rbp+var_58]
+	0x0000138a	mov	r14d, eax
+	0x0000138d	shr	r14d, 0xa
+	0x00001391	and	r14d, 0x7
+	0x00001395	lea	ecx, qword [ds:r14+0xffffffffffffffff]
+	0x00001399	cmp	ecx, 0x4
+	0x0000139c	jb	0x13a7
+
+	0x0000139e	test	bx, bx
+	0x000013a1	je	0x1692
+
+	0x000013a7	test	r14d, r14d				; XREF=__Z9hwGetRateP11IOUSBDevicett+668
+	0x000013aa	je	0x13e7
+
+	0x000013ac	lea	r15, qword [ds:_ADATMask.19987]	; _ADATMask.19987
+	0x000013b3	test	dword [ds:r15+r14*4], eax
+	0x000013b7	jne	0x13e7
+
+	0x000013b9	lea	ecx, qword [ds:0xfffffffc+r14*4]
+	0x000013c1	mov	r14d, dword [ss:rbp+var_54]
+	0x000013c5	shr	r14d, cl
+	0x000013c8	and	r14d, 0xf
+	0x000013cc	cmp	r14d, 0xb
+	0x000013d0	ja	0x1692
+
+	0x000013d6	lea	r15, qword [ds:0x175c]
+	0x000013dd	movsxd	r14, dword [ds:r15+r14*4]
+	0x000013e1	add	r14, r15
+	0x000013e4	jmp	r14					; switch statement using table at 0x175c, with 12 cases
+
+	0x000013e7	mov	ecx, dword [ss:rbp+var_54]		; XREF=__Z9hwGetRateP11IOUSBDevicett+682, __Z9hwGetRateP11IOUSBDevicett+695
+	0x000013ea	jmp	0x11e9
+
+	0x000013ef	mov	eax, 0xac44				; XREF 1
+	0x000013f4	jmp	0x1224
+
+	0x000013f9	shr	ecx, 0x16				; XREF 1
+	0x000013fc	jmp	0x133e
+*/
+	}
+
+
+
 
 
 
@@ -60,7 +572,7 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 /**********************************************************************************************************
 ***********************************************************************************************************
 
-					 F i r e f a c e   U C
+					 F i r e f a c e    U C    P a r t
 
 ***********************************************************************************************************
 **********************************************************************************************************/
