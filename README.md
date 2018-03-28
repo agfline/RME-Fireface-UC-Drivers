@@ -29,7 +29,7 @@ Le choix du mode va déterminer l'architecture des Interfaces et Endpoints (devi
 
 **Ce projet vise à porter les drivers en mode AP uniquement.**
 
-* Voir le device descriptor [DEVICE_DESC.md](./DEVICE_DESC.md)
+* Voir le [device descriptor](./device_descriptor).
 
 
 ## Audio
@@ -109,9 +109,7 @@ Voir :
 * de_RME_driver_USBAudioEngine::outIsochCallback()
 * de_RME_driver_USBAudioEngine::inBulkCallback()
 * de_RME_driver_USBAudioEngine::CalcTimestamp()
-* de_RME_driver_USBAudioEngine::
-* de_RME_driver_USBAudioEngine::
-* hwGetIsoModeFlag() -> sends 0xc0 0x11 (17)
+
 
 
 
