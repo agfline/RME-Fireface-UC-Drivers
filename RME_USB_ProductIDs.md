@@ -21,3 +21,5 @@
 | 0x3fcf    | Fireface UC2    |
 |           |                 |
 | 0x3fa0    | Digiface USB    |
+---
+Retrieved from [getDeviceNameByTypeId()](./asm/FirefaceUSBSettings/getDeviceNameByTypeId.c).
