@@ -13,6 +13,8 @@ int setVolume( libusb_device_handle *dev, uint32_t channelID, int8_t channelType
 void hwInitHardware ( libusb_device_handle *dev/*, uint16_t productId*/ );
 uint32_t hwGetRate ( libusb_device_handle *devh, /*uint16_t productId,*/ uint8_t /*dx*/ unknownArg );
 int sUserClientReadStatus( libusb_device_handle *dev, /*uint32_t productId,*/ uint32_t *status );
+void GetStatus( libusb_device_handle *dev );
+int getDeviceNameByTypeId( uint16_t productId, char **productName );
 
 // Not for 0x3fc6
 // uint8_t hwGetIsoModeFlag( libusb_device_handle *dev /*, uint16_t *productId*/ );

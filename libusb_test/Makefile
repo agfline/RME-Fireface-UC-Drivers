@@ -10,7 +10,9 @@ SRC = ./rme_uc.c\
 	  ../asm/FirefaceUSB/hwInitHardware.c\
 	  ../asm/FirefaceUSB/hwGetRate.c\
 	  ../asm/FirefaceUSB/de_RME_driver_USBAudioUserClient\:\:sUserClientReadStatus.c\
-	  ../asm/TotalmixFX/CCardIOUC\:\:SetGain.c
+	  ../asm/TotalmixFX/CCardIOUC\:\:SetGain.c\
+	  ../asm/FirefaceUSBSettings/CHardware\:\:GetStatus.c\
+	  ../asm/FirefaceUSBSettings/getDeviceNameByTypeId.c
 
 	  # Not for 0x3fc6
 	  #../asm/FirefaceUSB/hwGetIsoModeFlag.c
