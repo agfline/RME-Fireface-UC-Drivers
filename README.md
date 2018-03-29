@@ -16,8 +16,10 @@ Bien que ce projet repose sur le portage de la Fireface UC, les drivers officiel
 * Fireface UC (**firmware v118**)
 * VM Mac OSX 10.8.5 (**[drivers v2.20](http://www.rme-audio.de/en/downloads/driver/uc.php)**)
 
-L'ensemble du travail présenté ici repose sur l'analyse des trames USB (**usbmon & Wireshark**) ainsi que sur le désassemblage du driver officiel **FirefaceUSB.kext** et des logiciels **Fireface USB Settings** et **TotalMix-FX**.
+L'ensemble du travail présenté ici repose sur l'analyse des trames USB (**usbmon & Wireshark**) ainsi que sur le désassemblage du driver officiel [FirefaceUSB.kext](./asm/FirefaceUSB.asm) et des logiciels [Fireface USB Settings](./asm/FirefaceUSBSettings.asm) et [TotalMix-FX](./asm/TotalmixFX.asm).
 
+* Les captures Wireshark sont disponibles dans le dossier [cap/](./cap)
+* Les fonctions réimplémentées sont disponibles dans le dossier [asm/](./asm)
 
 ## Description
 
