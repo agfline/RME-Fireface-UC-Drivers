@@ -48,9 +48,8 @@ int hwSetSampleRate ( libusb_device_handle *dev, /*uint32_t productId,*/ uint32_
 	0x00001b42	mov	r15, rdi
 	0x00001b45	mov	edi, r14d		; argument #1 (rateValue) for method
 	0x00001b48	call	xRate()		; eax = perfect Rate Value
-	0x00001b4d	cmp	eax, 0x2b10f
-	0x00001b52	jg	0x1b9a
 */
+
 	uint32_t rate = xRate( rateValue );
 
 	printf("xRate : %d\n", rate);
@@ -59,12 +58,19 @@ int hwSetSampleRate ( libusb_device_handle *dev, /*uint32_t productId,*/ uint32_
 	uint32_t p2_wValue = 0;		// r12d
 	uint16_t p2_wIndex = 0;		// r13w
 
-	if ( rate > 0x2b10f ) {	/* 176399 */
+/*
+	0x00001b4d	cmp	eax, 0x2b10f
+	0x00001b52	jg	0x1b9a
+*/
+
+	if ( rate > 0x2b10f )	/* 176399 */
+	{
 /*
 		0x00001b9a	cmp	eax, 0x2b110
 		0x00001b9f	je	0x1b8e
 */
-		if ( rate == 0x2b110 ) { /* 176400 */
+		if ( rate == 0x2b110 )	/* 176400 */
+		{
 /*
 			0x00001b8e	mov	si, 0x1
 			0x00001b92	mov	r12d, 0x10
@@ -73,7 +79,9 @@ int hwSetSampleRate ( libusb_device_handle *dev, /*uint32_t productId,*/ uint32_
 			flag = 0x1;
 			p2_wValue = 0x10;
 
-		} else {
+		}
+		else	/* 192000 */
+		{
 /*
 			0x00001ba1	mov	si, 0x2
 			0x00001ba5	mov	r12d, 0x20
@@ -86,12 +94,15 @@ int hwSetSampleRate ( libusb_device_handle *dev, /*uint32_t productId,*/ uint32_
 	0x00001b54	cmp	eax, 0x1f3ff
 	0x00001b59	jg	0x1b79
 */
-	} else if ( rate > 0x1f3ff ) { /* 127999 */
+	}
+	else if ( rate > 0x1f3ff ) /* 127999 */
+	{
 /*
 		0x00001b79	cmp	eax, 0x1f400
 		0x00001b7e	jne	0x1ba1
 */
-		if ( rate == 128000 ) {
+		if ( rate == 0x1f400 )	/* 128000 */
+		{
 /*
 			0x00001b80	xor	esi, esi
 			0x00001b82	xor	r12d, r12d
@@ -100,7 +111,9 @@ int hwSetSampleRate ( libusb_device_handle *dev, /*uint32_t productId,*/ uint32_
 			flag = 0;
 			p2_wValue = 0;
 
-		} else {
+		}
+		else	/* ??? */
+		{
 /*
 			0x00001ba1	mov	si, 0x2
 			0x00001ba5	mov	r12d, 0x20
@@ -113,12 +126,15 @@ int hwSetSampleRate ( libusb_device_handle *dev, /*uint32_t productId,*/ uint32_
 	0x00001b5b	cmp	eax, 0x15887
 	0x00001b60	jg	0x1b87
 */
-	} else if ( rate > 0x15887 ) { /* 88199 */
+	}
+	else if ( rate > 0x15887 )	/* 88199 */
+	{
 /*
 		0x00001b87	cmp	eax, 0x15888
 		0x00001b8c	jne	0x1ba1
 */
-		if ( rate == 0x15888 ) { /* 88200 */
+		if ( rate == 0x15888 ) /* 88200 */
+		{
 /*
 			0x00001b8e	mov	si, 0x1
 			0x00001b92	mov	r12d, 0x10
@@ -127,7 +143,9 @@ int hwSetSampleRate ( libusb_device_handle *dev, /*uint32_t productId,*/ uint32_
 			flag = 0x1;
 			p2_wValue = 0x10;
 
-		} else {
+		}
+		else	/* 96000 */
+		{
 /*
 			0x00001ba1	mov	si, 0x2
 			0x00001ba5	mov	r12d, 0x20
@@ -140,7 +158,9 @@ int hwSetSampleRate ( libusb_device_handle *dev, /*uint32_t productId,*/ uint32_
 	0x00001b62	cmp	eax, 0x7d00
 	0x00001b67	je	0x1b80
 */
-	} else if ( rate == 0x7d00 ) { /* 32000 */
+	}
+	else if ( rate == 0x7d00 )	/* 32000 */
+	{
 /*
 		0x00001b80	xor	esi, esi
 		0x00001b82	xor	r12d, r12d
@@ -155,20 +175,23 @@ int hwSetSampleRate ( libusb_device_handle *dev, /*uint32_t productId,*/ uint32_
 	0x00001b69	cmp	eax, 0xac44
 	0x00001b6e	je	0x1b8e
 */
-	} else if ( rate == 0xac44 ) { /* 44100 */
+	}
+	else if ( rate == 0xac44 )	/* 44100 */
+	{
 /*
 		0x00001b8e	mov	si, 0x1
 		0x00001b92	mov	r12d, 0x10
 		0x00001b98	jmp	0x1bab			; end of else / if
 */
-		printf("44100 des familles\n");
 		flag = 0x1;
 		p2_wValue = 0x10;
 /*
 	0x00001b70	cmp	eax, 0xfa00
 	0x00001b75	je	0x1b80
 */
-	} else if ( rate == 0xfa00 ) { /* 64000 */
+	}
+	else if ( rate == 0xfa00 ) /* 64000 */
+	{
 /*
 		0x00001b80	xor	esi, esi
 		0x00001b82	xor	r12d, r12d
@@ -182,7 +205,9 @@ int hwSetSampleRate ( libusb_device_handle *dev, /*uint32_t productId,*/ uint32_
 /*
 	0x00001b77	jmp	0x1ba1
 */
-	} else {
+	}
+	else
+	{
 /*
 		0x00001ba1	mov	si, 0x2
 		0x00001ba5	mov	r12d, 0x20
