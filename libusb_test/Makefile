@@ -19,4 +19,4 @@ SRC = ./rme_uc.c\
 
 
 all: $(SRC)
-	$(CC) $(SRC) -o rme_uc $(CFLAGS)
+	$(CC) $(SRC) -o ../bin/rme_uc $(CFLAGS)
