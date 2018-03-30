@@ -82,7 +82,9 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 //		rc = Usb_vendor_device_request();
 
 		if ( rc != 0 )
+		{
 			return 0;
+		}
 /*
 		0x00001162	mov	eax, dword [ss:rbp+var_38]
 		0x00001165	shr	eax, 0xa
@@ -106,12 +108,14 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 		0x0000117c	cmp	eax, 0x1			; XREF 1
 		0x0000117f	je	0x11bd
 */
-		if ( eax == 1 ) {
+		if ( eax == 1 )
+		{
 /*
 			0x000011bd	test	byte [ss:rbp+var_2C], 0x80	; XREF 1
 			0x000011c1	jne	0x11e6
 */
-			if ( *(data_1 + 12) == 0x80 ) {
+			if ( *(data_1 + 12) == 0x80 )
+			{
 /*
 				0x000011c3	mov	r14d, dword [ss:rbp+var_34]
 				0x000011c7	and	r14d, 0xf
@@ -119,7 +123,9 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 				0x000011cf	ja	0x1692
 */
 				if ( ((*(uint32_t *)(data_1 + 4)) & 0xf) > 0xb )
+				{
 					return 0;
+				}
 /*
 				0x000011d5	lea	r15, qword [ds:0x16cc]
 				0x000011dc	movsxd	r14, dword [ds:r15+r14*4]
@@ -128,7 +134,9 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 */
 
 //				switch ( /*TODO*/ )	return ?
-			} else {
+			}
+			else
+			{
 /*
 				// TODO
 */
@@ -138,7 +146,9 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 		0x00001181	cmp	eax, 0x2
 		0x00001184	jne	0x11e6
 */
-		} else if ( eax == 0x2 ) {
+		}
+		else if ( eax == 0x2 )
+		{
 			// THAT PART ALWAYS RETURN
 /*
 			0x00001186	mov	r14d, dword [ss:rbp+var_34]
@@ -148,7 +158,9 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 			0x00001196	ja	0x1692
 */
 			if ( ((*(uint32_t*)(data_1 + 4) >> 0x4) & 0xf) > 0xb )
+			{
 				return 0;
+			}
 /*
 			0x0000119c	lea	r15, qword [ds:0x169c]
 			0x000011a3	movsxd	r14, dword [ds:r15+r14*4]
@@ -194,12 +206,14 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 		ecx = *(uint32_t*)(data_1 + 4);
 		eax = ecx & 0x300000;
 
-		if ( eax <= 0xfffff ) {
+		if ( eax <= 0xfffff )
+		{
 /*
 			0x000011f7	test	eax, eax
 			0x000011f9	jne	0x121b
 */
-			if ( eax != 0 ) {
+			if ( eax != 0 )
+			{
 				// THAT PART ALWAYS RETURN
 /*
 				0x0000121b	xor	eax, eax	; XREF 1
@@ -210,7 +224,8 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 */
 				eax = 0;
 
-				if ( ecx == 0x800000 ) {
+				if ( ecx == 0x800000 )
+				{
 /*
 					0x000013f9	shr	ecx, 0x16	; XREF 1
 					0x000013fc	jmp	0x133e
@@ -230,7 +245,9 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 				0x00001233	jmp	0x11b2
 */
 				return eax << 0x2;
-			} else {
+			}
+			else
+			{
 				// THAT PART ALWAYS RETURN
 /*
 				0x000011fb	mov	eax, 0x7d00
@@ -241,7 +258,8 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 				0x00001224	test	ecx, 0x800000		; XREF 3
 				0x0000122a	je	0x13f9
 */
-				if ( ecx == 0x800000 ) {
+				if ( ecx == 0x800000 )
+				{
 /*
 					0x000013f9	shr	ecx, 0x16	; XREF 1
 					0x000013fc	jmp	0x133e
@@ -267,7 +285,8 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 		0x00001202	cmp	eax, 0x100000			; XREF 1
 		0x00001207	je	0x13ef
 */
-		if ( eax == 0x100000 ) {
+		if ( eax == 0x100000 )
+		{
 			// THAT PART ALWAYS RETURN
 /*
 			0x000013ef	mov	eax, 0xac44		; XREF 1
@@ -278,7 +297,8 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 			0x00001224	test	ecx, 0x800000		; XREF 3
 			0x0000122a	je	0x13f9
 */
-			if ( ecx == 0x800000 ) {
+			if ( ecx == 0x800000 )
+			{
 /*
 				0x000013f9	shr	ecx, 0x16	; XREF 1
 				0x000013fc	jmp	0x133e
@@ -306,7 +326,8 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 		0x00001214	cmp	eax, 0x300000
 		0x00001219	je	0x121f
 */
-		if ( eax == 0x200000 || eax == 0x300000 ) {
+		if ( eax == 0x200000 || eax == 0x300000 )
+		{
 			// THAT PART ALWAYS RETURN
 /*
 			0x0000121f	mov	eax, 0xbb80		; XREF 2
@@ -316,7 +337,8 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 */
 			eax = 0xbb80;
 
-			if ( (ecx & 0x800000) == 0 ) {
+			if ( (ecx & 0x800000) == 0 )
+			{
 /*
 				0x000013f9	shr	ecx, 0x16	; XREF 1
 				0x000013fc	jmp	0x133e
@@ -347,7 +369,8 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 */
 		eax = 0;
 
-		if ( ecx == 0x800000 ) {
+		if ( ecx == 0x800000 )
+		{
 /*
 			0x000013f9	shr	ecx, 0x16	; XREF 1
 			0x000013fc	jmp	0x133e
@@ -589,21 +612,19 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 //x1401:
 
 /*
-	0x00001401	lea	rax, qword [ss:rbp+var_24]		; XREF
+	0x00001401	lea	rax, qword [ss:rbp+var_24]  ; XREF
 	0x00001405	mov	qword [ss:rsp+0x8], rax		; argument #8 (wLenDone)      for method
-	0x0000140a	mov	dword [ss:rsp], 0x1		; argument #7 (bmRequestType) for method
-	0x00001411	mov	esi, 0x11			; argument #2 (bRequest)      for method
-	0x00001416	xor	edx, edx			; argument #3 (wValue)        for method
-	0x00001418	lea	r8, qword [ss:rbp+var_5C]	; argument #5 (pData)         for method
-	0x0000141c	mov	r9d, 0x4			; argument #6 (wLength)       for method
-	0x00001422	mov	rdi, r14			; argument #1 (IOUSBDevice)   for method
-	0x00001425	xor	ecx, ecx			; argument #4 (wIndex)        for method
+	0x0000140a	mov	dword [ss:rsp], 0x1         ; argument #7 (bmRequestType) for method
+	0x00001411	mov	esi, 0x11                   ; argument #2 (bRequest)      for method
+	0x00001416	xor	edx, edx                    ; argument #3 (wValue)        for method
+	0x00001418	lea	r8, qword [ss:rbp+var_5C]   ; argument #5 (pData)         for method
+	0x0000141c	mov	r9d, 0x4                    ; argument #6 (wLength)       for method
+	0x00001422	mov	rdi, r14                    ; argument #1 (IOUSBDevice)   for method
+	0x00001425	xor	ecx, ecx                    ; argument #4 (wIndex)        for method
 	0x00001427	call	Usb_vendor_device_request()
 */
 	uint32_t data_4 = 0;		// rbp+var_5C
 //	uint32_t num_tx_bytes_4 = 0;	// rbp+var_24
-
-	// 0xc0 0x11 (17) 0x0000 0x0000 0x4
 
 	ctrl_setup ctrl;
 
@@ -612,8 +633,6 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 	ctrl.wValue = 0x0000;
 	ctrl.wIndex = 0x0000;
 	ctrl.wLength = 0x04;
-
-	// rc = send_ctrl_xfr( devh, &ctrl, (unsigned char *)&data_4 );
 
 	rc = send_ctrl_setup( dev, &ctrl, (unsigned char*)&data_4 );
 
@@ -627,40 +646,30 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 		return 0;
 	}
 
-	// printf("ans: 0x%08x\n", data_4);
-
-//	if ( rc != 0 )
-//		return 0;
-
 
 /*
 	0x00001434	mov	dword [ss:rbp+var_64], 0x0
 	0x0000143b	lea	rax, qword [ss:rbp+var_60]
-	0x0000143f	mov	qword [ss:rsp+0x8], rax		; argument #8 (wLenDone)      for method
-	0x00001444	mov	dword [ss:rsp], 0x1		; argument #7 (bmRequestType) for method
-	0x0000144b	mov	esi, 0x10			; argument #2 (bRequest)      for method
-	0x00001450	xor	edx, edx			; argument #3 (wValue)        for method
-	0x00001452	lea	r8, qword [ss:rbp+var_64]	; argument #5 (pData)         for method
-	0x00001456	mov	r9d, 0x4			; argument #6 (wLength)       for method
-	0x0000145c	mov	rdi, r14			; argument #1 (IOUSBDevice)   for method
-	0x0000145f	xor	ecx, ecx			; argument #4 (wIndex)        for method
+	0x0000143f	mov	qword [ss:rsp+0x8], rax     ; argument #8 (wLenDone)      for method
+	0x00001444	mov	dword [ss:rsp], 0x1         ; argument #7 (bmRequestType) for method
+	0x0000144b	mov	esi, 0x10                   ; argument #2 (bRequest)      for method
+	0x00001450	xor	edx, edx                    ; argument #3 (wValue)        for method
+	0x00001452	lea	r8, qword [ss:rbp+var_64]   ; argument #5 (pData)         for method
+	0x00001456	mov	r9d, 0x4                    ; argument #6 (wLength)       for method
+	0x0000145c	mov	rdi, r14                    ; argument #1 (IOUSBDevice)   for method
+	0x0000145f	xor	ecx, ecx                    ; argument #4 (wIndex)        for method
 	0x00001461	call	Usb_vendor_device_request()
 */
 	uint32_t data_5 = 0;		// rbp+var_64
 //	uint32_t num_tx_bytes_5 = 0;	// rbp+var_60
 
-	// 0xc0 0x10 (16) 0x0000 0x0000 0x4
-//	rc = Usb_vendor_device_request();
 	ctrl.bmRequestType = 0xc0;
 	ctrl.bRequest = 0x10;
 	ctrl.wValue = 0x0000;
 	ctrl.wIndex = 0x0000;
 	ctrl.wLength = 0x04;
 
-	// rc = send_ctrl_xfr( devh, &ctrl, (unsigned char *)&data_5 );
 	send_ctrl_setup( dev, &ctrl, (unsigned char*)&data_5 );
-
-	// printf("ans: 0x%08x\n", data_5);
 
 
 /*
@@ -671,7 +680,9 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 	uint16_t r15w = (uint16_t)((productId + 0xffffc040) & 0xffff);
 
 	if ( r15w > 0xf ) /* 0x3fc6 false */
+	{
 		return 0;
+	}
 
 /*
 	0x00001478	movzx	eax, r15w
@@ -687,7 +698,9 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 		0x00001490	jae	0x1692
 */
 		if ( ((0x2100 >> r15w) & 0x1) == 0 )
+		{
 			return 0;
+		}
 /*
 		0x00001496	mov	ecx, dword [ss:rbp+var_5C]	; ecx = data_4
 		0x00001499	mov	eax, ecx
@@ -701,16 +714,16 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 		0x000014ac	je	0x1692
 
 */
-		ecx = data_4;
-
-		/* NOTE: here we check if the clock is set to internal (see CHardware::GetStatus()) */
+		// ecx = data_4;
 
 		eax = data_4;
 		eax >>= 0x9;
 		eax &= 0x7;
 
 		if ( (uint32_t)(eax + 0xffffffffffffffff) >= 0x5 && unknownArg == 0 )
+		{
 			return 0;
+		}
 
 /*
 		0x000014b2	cmp	eax, 0x1			; XREF 1
@@ -774,7 +787,9 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 			0x000014cd	ja	0x1692
 */
 			if ( ((data_4 >> 0x10) & 0xf) > 0xb )
+			{
 				return 0;
+			}
 /*
 			0x000014d3	lea	rax, qword [ds:0x181c]
 			0x000014da	movsxd	rcx, dword [ds:rax+rcx*4]
@@ -811,12 +826,14 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 		0x0000164b	cmp	eax, 0xfffffff
 		0x00001650	jg	0x165d
 */
-		if ( (data_4 & 0x30000000) > 0xfffffff ) {
+		if ( (data_4 & 0x30000000) > 0xfffffff )
+		{
 /*
 			0x0000165d	cmp	eax, 0x10000000	; XREF 1
 			0x00001662	je	0x1676
 */
-			if ( (data_4 & 0x30000000) == 0x10000000 ) {
+			if ( (data_4 & 0x30000000) == 0x10000000 )
+			{
 /*
 				0x00001676	mov	eax, 0xac44	; XREF 1
 				0x0000167b	jmp	0x1682
@@ -826,13 +843,16 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 				0x00001682	test	ecx, ecx	; XREF 3
 				0x00001684	js	0x1230
 */
-				if ( (int32_t)data_4 < 0 ) {
+				if ( (int32_t)data_4 < 0 )
+				{
 /*
 					0x00001230	shl	eax, 0x2	; XREF 3
 					0x00001233	jmp	0x11b2
 */
 					return eax << 0x2;
-				} else {
+				}
+				else
+				{
 /*
 					0x0000168a	shr	ecx, 0x1e
 					0x0000168d	jmp	0x133e
@@ -852,9 +872,10 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 
 			0x0000166b	cmp	eax, 0x30000000
 			0x00001670	je	0x167d
-
 */
-			} else if ((data_4 & 0x30000000) == 0x20000000 || (data_4 & 0x30000000) == 0x30000000) {
+			}
+			else if ((data_4 & 0x30000000) == 0x20000000 || (data_4 & 0x30000000) == 0x30000000)
+			{
 /*
 				0x0000167d	mov	eax, 0xbb80		; XREF 2
 */
@@ -863,13 +884,16 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 				0x00001682	test	ecx, ecx		; XREF 3
 				0x00001684	js	 0x1230
 */
-				if ( (int32_t)data_4 < 0 ) {
+				if ( (int32_t)data_4 < 0 )
+				{
 /*
 					0x00001230	shl	eax, 0x2	; XREF 3
 					0x00001233	jmp	0x11b2
 */
 					return eax << 0x2;
-				} else {
+				}
+				else
+				{
 /*
 					0x0000168a	shr	ecx, 0x1e
 					0x0000168d	jmp	0x133e
@@ -888,19 +912,24 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 			0x00001672	xor	eax, eax	; XREF 1
 			0x00001674	jmp	0x1682
 */
-			} else {
+			}
+			else
+			{
 				eax = 0;
 /*
 				0x00001682	test	ecx, ecx	; XREF 3
 				0x00001684	js	0x1230
 */
-				if ( (int32_t)data_4 < 0 ) {
+				if ( (int32_t)data_4 < 0 )
+				{
 /*
 					0x00001230	shl	eax, 0x2	; XREF 3
 					0x00001233	jmp	0x11b2
 */
 					return eax << 0x2;
-				} else {
+				}
+				else
+				{
 /*
 					0x0000168a	shr	ecx, 0x1e
 					0x0000168d	jmp	0x133e
@@ -920,7 +949,8 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 		0x00001652	test	eax, eax
 		0x00001654	jne	0x1672
 */
-		if ( (data_4 & 0x30000000) != 0 ) {
+		if ( (data_4 & 0x30000000) != 0 )
+		{
 /*
 			0x00001672	xor	eax, eax	; XREF 1
 			0x00001674	jmp	0x1682
@@ -930,13 +960,16 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 			0x00001682	test	ecx, ecx	; XREF 3
 			0x00001684	js	0x1230
 */
-			if ( (int32_t)data_4 < 0 ) {
+			if ( (int32_t)data_4 < 0 )
+			{
 /*
 				0x00001230	shl	eax, 0x2	; XREF 3
 				0x00001233	jmp	0x11b2
 */
 				return eax << 0x2;
-			} else {
+			}
+			else
+			{
 /*
 				0x0000168a	shr	ecx, 0x1e
 				0x0000168d	jmp	0x133e
@@ -961,14 +994,16 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 		0x00001682	test	ecx, ecx	; XREF 3
 		0x00001684	js	0x1230
 */
-		if ( (int32_t)data_4 < 0 ) {
+		if ( (int32_t)data_4 < 0 )
+		{
 /*
 			0x00001230	shl	eax, 0x2	; XREF 3
 			0x00001233	jmp	0x11b2
 */
 			return eax << 0x2;
-
-		} else {
+		}
+		else
+		{
 /*
 			0x0000168a	shr	ecx, 0x1e
 			0x0000168d	jmp	0x133e
@@ -997,8 +1032,7 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 
 
 
-
-	// REPRISE 14e3 ok
+	// 0x3fc6 TRUE
 /*
 	0x000014e3	mov	ecx, dword [ss:rbp+var_5C]		; XREF 1
 	0x000014e6	mov	eax, ecx
@@ -1011,20 +1045,35 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 	0x000014f6	test	bx, bx
 	0x000014f9	je	0x1692
 */
-	ecx = data_4;
+	// ecx = data_4;
 
-	eax = data_4;
-	eax >>= 0x9;
-	eax &= 0x7;
+	uint32_t clock_src = (data_4 >> 0x9) & 0x7;
 
-	if ( (((uint32_t)(eax + 0xffffffffffffffff) & 0xffffffffffffffff) >= 0x5) && (unknownArg == 0) )
+	/*
+		NOTE:
+			Return 0 if the clock source is internal (0x7), unless unknownArg is set.
+	*/
+
+	if ( (((uint32_t)(clock_src + 0xffffffffffffffff) & 0xffffffffffffffff) >= 0x5) && (unknownArg == 0) )
+	{
 		return 0;
+	}
+
+
+
+
+/***    E x t e r n a l   C l o c k   S o u r c e    ***/
+
+
+
+
+	/* TODO: Probably WordClock clock source, TO BE TESTED */
 
 /*
 	0x000014ff	cmp	eax, 0x3			; XREF 1
 	0x00001502	je	0x1558
 */
-	if ( eax == 0x3 )
+	if ( clock_src == 0x3 )
 	{
 /*
 		0x00001558	test	byte [ss:rbp+var_64], 0x40	; XREF 1
@@ -1252,11 +1301,16 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 		}
 
 	}
+
+
+
+	/*** optical clock source ***/
+
 /*
 	0x00001504	cmp	eax, 0x2
 	0x00001507	je	0x152d
 */
-	if ( eax == 0x2 )
+	if ( clock_src == 0x2 )
 	{
 /*
 		0x0000152d	mov	edx, ecx			; XREF 1
@@ -1272,14 +1326,8 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 			0x00001558	test	byte [ss:rbp+var_64], 0x40	; XREF 1
 			0x0000155c	jne	0x157d
 */
-			if ( (eax != 0x3) || ((unsigned char)data_4 != 0x40) )
+			if ( (clock_src != 0x3) || ((unsigned char)data_4 != 0x40) )
 			{
-
-
-
-
-
-
 /*
 				0x0000157d	mov	eax, ecx		; XREF 3
 				0x0000157f	and	eax, 0x3000000
@@ -1466,24 +1514,18 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 
 				return eax;
 
-
-
-
-
-
 			}
+
 /*
 			0x0000155e	shr	ecx, 0x14
 			0x00001561	and	ecx, 0xf
 			0x00001564	cmp	ecx, 0xb
 			0x00001567	ja	0x1692
 */
-//			data_4 >>= 0x14;
-//			data_4  &= 0xf;
-
 			if ( ((data_4 >> 0x14) & 0xf) > 0xb )
+			{
 				return 0;
-
+			}
 /*
 			0x0000156d	lea	rax, qword [ds:0x17ec]
 			0x00001574	movsxd	rcx, dword [ds:rax+rcx*4]
@@ -1513,12 +1555,10 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 		0x0000153a	cmp	ecx, 0xb
 		0x0000153d	ja	0x1692
 */
-//		data_4 >>= 0x10;
-//		data_4  &= 0xf;
-
 		if ( ((data_4 >> 0x10) & 0xf) > 0xb )
+		{
 			return 0;
-
+		}
 /*
 		0x00001543	lea	rax, qword [ds:0x17bc]
 		0x0000154a	movsxd	rcx, dword [ds:rax+rcx*4]
@@ -1543,11 +1583,15 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 
 	}
 
+
+
+	/*** SPDIF coax clock source ***/
+
 /*
 	0x00001509	cmp	eax, 0x1
 	0x0000150c	jne	0x157d
 */
-	if ( eax == 0x1 )
+	if ( clock_src == 0x1 )
 	{
 /*
 		0x0000150e	shr	ecx, 0xc
@@ -1555,11 +1599,10 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 		0x00001514	cmp	ecx, 0xb
 		0x00001517	ja	0x1692
 */
-//		data_4 >>= 0xc;
-//		data_4  &= 0xf;
-
 		if ( ((data_4 >> 0xc) & 0xf) > 0xb )
+		{
 			return 0;
+		}
 /*
 		0x0000151d	lea	rax, qword [ds:0x178c]
 		0x00001524	movsxd	rcx, dword [ds:rax+rcx*4]
@@ -1589,13 +1632,23 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 
 
 
+
+
+
+
+
+
+/***    I n t e r n a l   C l o c k   S o u r c e    ***/
+
+
 /*
 	0x0000157d	mov	eax, ecx		; XREF 3
 	0x0000157f	and	eax, 0x3000000
 	0x00001584	cmp	eax, 0xffffff
 	0x00001589	jg	0x1596
 */
-	if ( (data_4 & 0x3000000) > 0xffffff )	/* 0x00feff01 false */
+
+	if ( (data_4 & 0x3000000) > 0xffffff )
 	{
 /*
 		0x00001596	cmp	eax, 0x1000000	; XREF 1
@@ -1607,7 +1660,7 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 			0x000015af	mov	eax, 0xac44	; XREF 1
 			0x000015b4	jmp	0x15bb
 */
-			eax = 0xac44;
+			eax = 0xac44;	/* 44100 */
 /*
 			0x000015bb	test	ecx, 0x8000000	; XREF 3
 			0x000015c1	jne	0x1230
@@ -1628,13 +1681,11 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 			0x00001341	shl	eax, cl
 			0x00001343	jmp	0x11b2
 */
-			data_4 >>= 0x1a;
-			data_4 &= 0x1;
-			eax <<= data_4;
+			eax <<= (data_4 >> 0x1a) & 0x1;
 
 			return eax;
-
 		}
+
 /*
 		0x0000159d	cmp	eax, 0x2000000
 		0x000015a2	je	0x15b6
@@ -1647,7 +1698,7 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 /*
 			0x000015b6	mov	eax, 0xbb80		; XREF 2
 */
-			eax = 0xbb80;
+			eax = 0xbb80;	/* 48000 */
 /*
 			0x000015bb	test	ecx, 0x8000000		; XREF 3
 			0x000015c1	jne	0x1230
@@ -1668,13 +1719,11 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 			0x00001341	shl	eax, cl
 			0x00001343	jmp	0x11b2
 */
-			data_4 >>= 0x1a;
-			data_4 &= 0x1;
-			eax <<= data_4;
+			eax <<= (data_4 >> 0x1a) & 0x1;
 
 			return eax;
-
 		}
+
 /*
 		0x000015ab	xor	eax, eax	; XREF 1
 		0x000015ad	jmp	0x15bb
@@ -1700,18 +1749,19 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 		0x00001341	shl	eax, cl
 		0x00001343	jmp	0x11b2
 */
-		data_4 >>= 0x1a;
-		data_4 &= 0x1;
-		eax <<= data_4;
+		eax <<= (data_4 >> 0x1a) & 0x1;
 
 		return eax;
 
 	}
+
+
+
 /*
 	0x0000158b	test	eax, eax
 	0x0000158d	jne	0x15ab
 */
-	if ( (data_4 & 0x3000000) != 0 ) /* 0x00feff01 false */
+	if ( (data_4 & 0x3000000) != 0 )
 	{
 /*
 		0x000015ab	xor	eax, eax	; XREF 1
@@ -1738,12 +1788,13 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 		0x00001341	shl	eax, cl
 		0x00001343	jmp	0x11b2
 */
-		data_4 >>= 0x1a;
-		data_4 &= 0x1;
-		eax <<= data_4;
+		eax <<= (data_4 >> 0x1a) & 0x1;
 
 		return eax;
 	}
+
+
+
 /*
 	0x0000158f	mov	eax, 0x7d00
 	0x00001594	jmp	0x15bb
@@ -1753,7 +1804,7 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 	0x000015bb	test	ecx, 0x8000000		; XREF 3
 	0x000015c1	jne	0x1230
 */
-	if ( (data_4 & 0x8000000) != 0 ) /* 0x00feff01 false */
+	if ( (data_4 & 0x8000000) != 0 )
 	{
 /*
 		0x00001230	shl	eax, 0x2	; XREF 3
@@ -1769,9 +1820,7 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 	0x00001341	shl	eax, cl
 	0x00001343	jmp	0x11b2
 */
-	data_4 >>= 0x1a;
-	data_4 &= 0x1;
-	eax <<= data_4;
+	eax <<= (data_4 >> 0x1a) & 0x1;
 
 	return eax;
 
