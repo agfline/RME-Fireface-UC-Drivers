@@ -1,4 +1,34 @@
 
+#include <stdint.h>
+#include <stdio.h>
+
+#include "../libusb_test/usb.h"
+
+
+/*
+    TODO: Test with WordClock if it is realy freq_ids !
+
+    clock_src        // 7 on internal clock, 1 on SPDIF clock, 2, on OPTICAL clock
+    ff_status_0x04   // This is 2 when OPTICAL is plugged in, 0 otherwise. COAX has no effect.
+
+    word_sync        // WORDCLK ? 0 = NO LOCK, 1 = LOCK, 2 = SYNC
+    word_freq_id     // ???
+
+    opti_sync        // OPTICAL : 0 = NO LOCK, 1 = LOCK, 2 = SYNC
+    opti_freq_id     // ???
+
+    coax_sync        // COAXIAL : 0 = NO LOCK, 1 = LOCK, 2 = SYNC
+    coax_freq_id     // ???
+*/
+
+
+void GetStatus( libusb_device_handle *dev )
+{
+    uint16_t productId = 0x3fc6;
+
+    ctrl_setup ctrl;
+
+/*
 ================ B E G I N N I N G   O F   P R O C E D U R E ================
 
 
@@ -12,20 +42,497 @@
 0x000000010000363c         push       r12
 0x000000010000363e         push       rbx
 0x000000010000363f         sub        rsp, 0x88
-0x0000000100003646         mov        r15, rdx
-0x0000000100003649         mov        ebx, esi
-0x000000010000364b         mov        r14, rdi
+*/
+
+/* Stack protection
+0x0000000100003646         mov        r15, rdx          // r15 = FirefaceStatus (arg3)
+0x0000000100003649         mov        ebx, esi          // ebx = int (arg2)
+0x000000010000364b         mov        r14, rdi          // r14 = CHardware (this ptr)
 0x000000010000364e         mov        r12, qword [ds:imp___got____stack_chk_guard] ; imp___got____stack_chk_guard
 0x0000000100003655         mov        r12, qword [ds:r12]
 0x0000000100003659         mov        qword [ss:rbp+var_30], r12
+*/
+/*
 0x000000010000365d         mov        esi, 0x84                                 ; argument #2 for method imp___stubs____bzero
 0x0000000100003662         mov        rdi, r15                                  ; argument #1 for method imp___stubs____bzero
-0x0000000100003665         call       imp___stubs____bzero
+0x0000000100003665         call       imp___stubs____bzero  // NOTE: is this some kind of memset on the FirefaceStatus structure ?
 0x000000010000366a         movsxd     rbx, ebx
 0x000000010000366d         mov        eax, dword [ds:r14+rbx*4+0x594]
 0x0000000100003675         cmp        eax, 0x3fbf
 0x000000010000367a         jg         0x100003860
+*/
 
+
+    if ( productId > 0x3fbf ) /* 0x3fc6 true */
+    {
+/*
+        0x0000000100003860         add        eax, 0xffffc040                           ; XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+72
+        0x0000000100003865         cmp        eax, 0xf
+        0x0000000100003868         ja         0x100004371
+*/
+        if ( (uint32_t)((productId + 0xffffc040) & 0xffffffff) > 0xf ) /* 0x3fc6 false */
+        {
+            /* This is the default of switch statement */
+            return;
+        }
+/*
+        0x000000010000386e         lea        rcx, qword [ds:0x100004420]
+        0x0000000100003875         movsxd     rax, dword [ds:rcx+rax*4]
+        0x0000000100003879         add        rax, rcx
+        0x000000010000387c         jmp        rax
+*/
+        switch ( (uint32_t)((productId + 0xffffc040) & 0xffffffff) )
+        {
+            case 0x00:
+            case 0x06:  /* 0x3fc6 true */
+            case 0x07:
+            case 0x09:
+            case 0x0f:
+/*
+                0x000000010000387e         mov        dword [ss:rbp+var_84], 0x0                ; case 0, 6, 7, 9, 15, XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+586
+                0x0000000100003888         mov        rdi, qword [ds:r14+rbx*8+0x218]
+                0x0000000100003890         mov        byte [ss:rbp+var_80], 0xc0
+                0x0000000100003894         mov        byte [ss:rbp+var_7F], 0x11
+                0x0000000100003898         mov        word [ss:rbp+var_7E], 0x0
+                0x000000010000389e         mov        word [ss:rbp+var_7C], 0x0
+                0x00000001000038a4         mov        word [ss:rbp+var_7A], 0x4
+                0x00000001000038aa         lea        rax, qword [ss:rbp+var_84]    // pointer to the returned status value ?
+                0x00000001000038b1         mov        qword [ss:rbp+var_78], rax
+                0x00000001000038b5         mov        dword [ss:rbp+var_6C], 0x1e
+                0x00000001000038bc         mov        dword [ss:rbp+var_68], 0x1e
+                0x00000001000038c3         mov        rax, qword [ds:rdi]
+                0x00000001000038c6         lea        rsi, qword [ss:rbp+var_80]
+                0x00000001000038ca         call       qword [ds:rax+0xf0]
+*/
+                ctrl.bmRequestType = 0xc0;
+                ctrl.bRequest  = 0x11;
+                ctrl.wValue  = 0x0000;
+                ctrl.wIndex  = 0x0000;
+                ctrl.wLength = 0x0004;
+
+                uint32_t status = 0;
+
+                int rc = send_ctrl_setup( dev, &ctrl, (unsigned char*)&status );
+
+                printf( "raw_status     : 0x%08x\n", status );
+/*
+                0x00000001000038d0         mov        ecx, dword [ss:rbp+var_84]    // pointer to the returned status value ?
+                0x00000001000038d6         mov        edx, ecx                      // edx = status
+                0x00000001000038d8         shr        edx, 0x9
+                0x00000001000038db         and        edx, 0x7
+                0x00000001000038de         test       ch, 0x1
+                0x00000001000038e1         mov        esi, 0x5
+                0x00000001000038e6         cmove      esi, edx
+                0x00000001000038e9         cmp        edx, 0x2
+                0x00000001000038ec         cmovne     esi, edx
+                0x00000001000038ef         mov        dword [ds:r15], esi
+*/
+                uint32_t edx = (status >> 0x9) & 0x7;
+                uint32_t esi = 0x5; // internal clock source
+
+                if ( ((status >> 0x8) & 0x1) == 0 ) // test ch, 1    -     ZF = 1
+                {
+                    esi = edx;
+                }
+
+                if ( edx != 0x2 )
+                {
+                    esi = edx;
+                }
+
+                uint32_t clock_src = esi;
+
+                printf( "clock_src : %d\n", clock_src );
+
+
+/*
+                0x00000001000038f2         test       eax, eax
+                0x00000001000038f4         je         0x100003fa2
+*/
+
+                if ( rc != 0 )
+                {
+                    // NOTE: The following might be default values, and thus a description of the FirefaceStatus structure
+/*
+                    0x00000001000038fa         mov        dword [ds:r15], 0x6
+                    0x0000000100003901         mov        dword [ds:r15+0x4], 0x0   // ok
+                    0x0000000100003909         mov        dword [ds:r15+0x8], 0x3   // ok
+                    0x0000000100003911         mov        dword [ds:r15+0x18], 0xc  // ok
+                    0x0000000100003919         mov        dword [ds:r15+0xc], 0x3   // ok
+                    0x0000000100003921         mov        dword [ds:r15+0x1c], 0xc  // ok
+                    0x0000000100003929         mov        dword [ds:r15+0x14], 0x3
+                    0x0000000100003931         shr        ecx, 0xc
+                    0x0000000100003934         and        ecx, 0xf
+                    0x0000000100003937         mov        dword [ds:r15+0x24], ecx
+                    0x000000010000393b         add        r15, 0x24
+                    0x000000010000393f         mov        rsi, r15
+                    0x0000000100003942         jmp        0x10000436b
+*/
+
+/* TODO
+                    0x000000010000436b         mov        dword [ds:rsi], 0xc                       ; XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+784, __ZN9CHardware9GetStatusEiP14FirefaceStatus+2411, __ZN9CHardware9GetStatusEiP14FirefaceStatus+2862, __ZN9CHardware9GetStatusEiP14FirefaceStatus+3374, __ZN9CHardware9GetStatusEiP14FirefaceStatus+3379
+*/
+
+/* stack guard
+                    0x0000000100004371         cmp        r12, qword [ss:rbp+var_30]                ; case 5, 14, XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+83, __ZN9CHardware9GetStatusEiP14FirefaceStatus+160, __ZN9CHardware9GetStatusEiP14FirefaceStatus+566, __ZN9CHardware9GetStatusEiP14FirefaceStatus+586, __ZN9CHardware9GetStatusEiP14FirefaceStatus+860, __ZN9CHardware9GetStatusEiP14FirefaceStatus+1564, __ZN9CHardware9GetStatusEiP14FirefaceStatus+2576, __ZN9CHardware9GetStatusEiP14FirefaceStatus+3085, __ZN9CHardware9GetStatusEiP14FirefaceStatus+3383, __ZN9CHardware9GetStatusEiP14FirefaceStatus+3555
+                    0x0000000100004375         jne        0x10000441a
+
+                    0x000000010000437b         add        rsp, 0x88
+                    0x0000000100004382         pop        rbx
+                    0x0000000100004383         pop        r12
+                    0x0000000100004385         pop        r13
+                    0x0000000100004387         pop        r14
+                    0x0000000100004389         pop        r15
+                    0x000000010000438b         pop        rbp
+                    0x000000010000438c         ret
+*/
+                    return;
+                }
+
+/*
+                0x0000000100003fa2         mov        edx, ecx                                  ; XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+706
+                0x0000000100003fa4         and        edx, 0x102
+                0x0000000100003faa         cmp        edx, 0x102
+                0x0000000100003fb0         jne        0x100003fce
+*/
+
+                uint32_t ff_status_0x04 = 0;
+
+                if ( (status & 0x102) != 0x102 )
+                {
+/*
+                    0x0000000100003fce         cmp        edx, 0x2                                  ; XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+2430
+                    0x0000000100003fd1         jne        0x100004069
+*/
+                    if ( (status & 0x102) != 0x2 )
+                    {
+/*
+                        0x0000000100004069         mov        dword [ds:r15+0x4], 0x0                   ; XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+2463
+                // next 0x0000000100004071
+*/
+                        ff_status_0x04 = 0x00;
+                    }
+                    else
+                    {
+/*
+                        0x0000000100003fd7         mov        dword [ds:r15+0x4], 0x2
+                        0x0000000100003fdf         jmp        0x100004071
+*/
+                        ff_status_0x04 = 0x02;
+                    }
+                }
+                else
+                {
+/*
+                    0x0000000100003fb2         mov        dword [ds:r15+0x4], 0x1
+                    0x0000000100003fba         jmp        0x100004071
+*/
+                    ff_status_0x04 = 0x01;
+                }
+
+                printf( "ff_status_0x04 : %d\n", ff_status_0x04 );
+/*
+                0x0000000100004071         mov        edx, ecx                                  ; XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+2440, __ZN9CHardware9GetStatusEiP14FirefaceStatus+2477
+                0x0000000100004073         and        edx, 0x44
+                0x0000000100004076         cmp        edx, 0x44
+                0x0000000100004079         jne        0x100004087
+*/
+
+                uint32_t word_sync = 0;
+                int is_unplugged = 0;
+
+                if ( (status & 0x44) != 0x44 )
+                {
+/*
+                    0x0000000100004087         test       cl, 0x4                                   ; XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+2631
+                    0x000000010000408a         jne        0x100004098
+*/
+                    if ( (status & 0x4) != 0 )
+                    {
+/*
+                        0x0000000100004098         mov        dword [ds:r15+0x8], 0x1                   ; XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+2648
+                        0x00000001000040a0         xor        edx, edx
+                // next 0x00000001000040a2
+*/
+                        word_sync = 0x01;
+                        is_unplugged = 0;
+                    }
+                    else
+                    {
+/*
+                        0x000000010000408c         mov        dword [ds:r15+0x8], 0x0
+                        0x0000000100004094         mov        dl, 0x1
+                        0x0000000100004096         jmp        0x1000040a2
+*/
+                        word_sync = 0x00;
+                        is_unplugged = 1;
+                    }
+
+                }
+                else
+                {
+/*
+                    0x000000010000407b         mov        dword [ds:r15+0x8], 0x2
+                    0x0000000100004083         xor        edx, edx
+                    0x0000000100004085         jmp        0x1000040a2
+*/
+                    word_sync = 0x02;
+                    is_unplugged = 0;
+                }
+
+                printf( "word_sync : %d\n", word_sync );
+/*
+                0x00000001000040a2         mov        esi, ecx                                  ; XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+2643, __ZN9CHardware9GetStatusEiP14FirefaceStatus+2660
+                0x00000001000040a4         shr        esi, 0x14
+                0x00000001000040a7         and        esi, 0xf
+                0x00000001000040aa         test       dl, dl
+                0x00000001000040ac         mov        edx, 0xc
+                0x00000001000040b1         mov        edi, esi
+                0x00000001000040b3         cmovne     edi, edx
+                0x00000001000040b6         cmp        esi, 0xc
+                0x00000001000040b9         cmova      edi, edx
+                0x00000001000040bc         test       eax, eax
+                0x00000001000040be         cmovne     edi, edx
+                0x00000001000040c1         mov        dword [ds:r15+0x18], edi
+*/
+                esi = (status >> 0x14) & 0xf;
+                edx = 0xc;
+                uint32_t edi = esi;
+
+                if ( is_unplugged != 0 )
+                {
+                    edi = edx;
+                }
+
+                if ( esi > 0xc )
+                {
+                    edi = edx;
+                }
+
+                if ( rc != 0 )
+                {
+                    edi = edx;
+                }
+
+                uint32_t word_freq_id = edi;
+
+                printf( "word_freq_id : %d\n", word_freq_id );
+
+/*
+                0x00000001000040c5         mov        edx, ecx
+                0x00000001000040c7         and        edx, 0x22
+                0x00000001000040ca         cmp        edx, 0x22
+                0x00000001000040cd         jne        0x1000040db
+*/
+                uint32_t opti_sync = 0;
+
+                if ( (status & 0x22) != 0x22 )
+                {
+/*
+                    0x00000001000040db         test       cl, 0x2                                   ; XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+2715
+                    0x00000001000040de         jne        0x1000040ec
+*/
+                    if ( (status & 0x2) != 0 )
+                    {
+/*
+                        0x00000001000040ec         mov        dword [ds:r15+0xc], 0x1                   ; XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+2732
+                        0x00000001000040f4         xor        edx, edx
+                // next 0x00000001000040f6
+*/
+                        opti_sync = 0x1;
+                        is_unplugged = 0;
+                    }
+                    else
+                    {
+/*
+                        0x00000001000040e0         mov        dword [ds:r15+0xc], 0x0
+                        0x00000001000040e8         mov        dl, 0x1
+                        0x00000001000040ea         jmp        0x1000040f6
+*/
+                        opti_sync = 0x0;
+                        is_unplugged = 1;
+                    }
+                }
+                else
+                {
+/*
+                    0x00000001000040cf         mov        dword [ds:r15+0xc], 0x2
+                    0x00000001000040d7         xor        edx, edx
+                    0x00000001000040d9         jmp        0x1000040f6
+*/
+                    opti_sync = 0x2;
+                    is_unplugged = 0;
+                }
+
+                printf( "opti_sync : %d\n", opti_sync );
+
+/*
+                0x00000001000040f6         mov        esi, ecx                                  ; XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+2727, __ZN9CHardware9GetStatusEiP14FirefaceStatus+2744
+                0x00000001000040f8         shr        esi, 0x10
+                0x00000001000040fb         and        esi, 0xf
+                0x00000001000040fe         test       dl, dl
+                0x0000000100004100         mov        edx, 0xc
+                0x0000000100004105         mov        edi, esi
+                0x0000000100004107         cmovne     edi, edx
+                0x000000010000410a         cmp        esi, 0xc
+                0x000000010000410d         cmova      edi, edx
+                0x0000000100004110         test       eax, eax
+                0x0000000100004112         cmovne     edi, edx
+                0x0000000100004115         mov        dword [ds:r15+0x1c], edi
+*/
+                esi = (status >> 0x10) & 0xf;
+                edx = 0xc;
+                edi = esi;
+
+                if ( is_unplugged != 0 )
+                {
+                    edi = edx;
+                }
+
+                if ( esi > 0xc )
+                {
+                    edi = edx;
+                }
+
+                if ( rc != 0 )
+                {
+                    edi = edx;
+                }
+
+                uint32_t opti_freq_id = edi;
+
+                printf( "opti_freq_id : %d\n", opti_freq_id );
+
+
+/*
+                0x0000000100004119         mov        edx, ecx
+                0x000000010000411b         and        edx, 0x11
+                0x000000010000411e         cmp        edx, 0x11
+                0x0000000100004121         jne        0x10000412f
+*/
+                uint32_t coax_sync = 0;
+
+                if ( (status & 0x11) != 0x11 )
+                {
+/*
+                    0x000000010000412f         test       cl, 0x1                                   ; XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+2799
+                    0x0000000100004132         jne        0x100004140
+*/
+                    if ( (status & 0x1) != 0 )
+                    {
+/*
+                        0x0000000100004140         mov        dword [ds:r15+0x14], 0x1                  ; XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+2816
+                        0x0000000100004148         xor        edx, edx
+                // next 0x000000010000414a
+*/
+                        coax_sync = 0x1;
+                        is_unplugged = 0;
+                    }
+                    else
+                    {
+/*
+                        0x0000000100004134         mov        dword [ds:r15+0x14], 0x0
+                        0x000000010000413c         mov        dl, 0x1
+                        0x000000010000413e         jmp        0x10000414a
+*/
+                        coax_sync = 0x0;
+                        is_unplugged = 1;
+                    }
+                }
+                else
+                {
+/*
+                    0x0000000100004123         mov        dword [ds:r15+0x14], 0x2
+                    0x000000010000412b         xor        edx, edx
+                    0x000000010000412d         jmp        0x10000414a
+*/
+                    coax_sync = 0x2;
+                    is_unplugged = 0;
+                }
+
+                printf( "coax_sync : %d\n", coax_sync );
+
+/*
+                0x000000010000414a         shr        ecx, 0xc                                  ; XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+2811, __ZN9CHardware9GetStatusEiP14FirefaceStatus+2828
+                0x000000010000414d         and        ecx, 0xf
+                0x0000000100004150         lea        rsi, qword [ds:r15+0x24]
+                0x0000000100004154         test       eax, eax
+                0x0000000100004156         mov        dword [ds:r15+0x24], ecx
+                0x000000010000415a         je         0x100004362
+*/
+                uint32_t ecx = (status >> 0xc) & 0xf;
+                uint32_t coax_freq_id = ecx;
+
+                // uint32_t *rsi = &coax_freq_id;
+
+                // *rsi = ecx;
+
+                if ( rc == 0 )
+                {
+/*
+                    0x0000000100004362         cmp        ecx, 0xc                                  ; XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+2856
+                    0x0000000100004365         ja         0x10000436b
+
+                    0x0000000100004367         test       dl, dl
+                    0x0000000100004369         je         0x100004371
+*/
+                    if ( ecx > 0xc || is_unplugged != 0 )
+                    {
+/*
+                        0x000000010000436b         mov        dword [ds:rsi], 0xc                       ; XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+784, __ZN9CHardware9GetStatusEiP14FirefaceStatus+2411, __ZN9CHardware9GetStatusEiP14FirefaceStatus+2862, __ZN9CHardware9GetStatusEiP14FirefaceStatus+3374, __ZN9CHardware9GetStatusEiP14FirefaceStatus+3379
+                // next 0x0000000100004371
+*/
+                        // *rsi = 0xc;
+                        coax_freq_id = 0xc;
+                    }
+                }
+                else
+                {
+/*
+                    0x000000010000436b         mov        dword [ds:rsi], 0xc                       ; XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+784, __ZN9CHardware9GetStatusEiP14FirefaceStatus+2411, __ZN9CHardware9GetStatusEiP14FirefaceStatus+2862, __ZN9CHardware9GetStatusEiP14FirefaceStatus+3374, __ZN9CHardware9GetStatusEiP14FirefaceStatus+3379
+            // next 0x0000000100004371
+*/
+                    // *rsi = 0xc;
+                    coax_freq_id = 0xc;
+                }
+
+                printf( "coax_freq_id : %d\n", coax_freq_id );
+/*
+                0x0000000100004160         jmp        0x10000436b
+*/
+
+/* stack guard
+                0x0000000100004371         cmp        r12, qword [ss:rbp+var_30]                ; case 5, 14, XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+83, __ZN9CHardware9GetStatusEiP14FirefaceStatus+160, __ZN9CHardware9GetStatusEiP14FirefaceStatus+566, __ZN9CHardware9GetStatusEiP14FirefaceStatus+586, __ZN9CHardware9GetStatusEiP14FirefaceStatus+860, __ZN9CHardware9GetStatusEiP14FirefaceStatus+1564, __ZN9CHardware9GetStatusEiP14FirefaceStatus+2576, __ZN9CHardware9GetStatusEiP14FirefaceStatus+3085, __ZN9CHardware9GetStatusEiP14FirefaceStatus+3383, __ZN9CHardware9GetStatusEiP14FirefaceStatus+3555
+                0x0000000100004375         jne        0x10000441a
+
+                0x000000010000437b         add        rsp, 0x88
+                0x0000000100004382         pop        rbx
+                0x0000000100004383         pop        r12
+                0x0000000100004385         pop        r13
+                0x0000000100004387         pop        r14
+                0x0000000100004389         pop        r15
+                0x000000010000438b         pop        rbp
+                0x000000010000438c         ret
+*/
+
+                return;
+        }
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 0x0000000100003680         cmp        eax, 0x3fa0
 0x0000000100003685         jne        0x100004371
 
@@ -154,7 +661,7 @@
 0x0000000100003879         add        rax, rcx
 0x000000010000387c         jmp        rax                                       ; switch statement using table at 0x100004420, with 16 cases
 
-0x000000010000387e         mov        dword [ss:rbp+var_84], 0x0                ; case 15, XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+586
+0x000000010000387e         mov        dword [ss:rbp+var_84], 0x0                ; case 0, 6, 7, 9, 15, XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+586
 0x0000000100003888         mov        rdi, qword [ds:r14+rbx*8+0x218]
 0x0000000100003890         mov        byte [ss:rbp+var_80], 0xc0
 0x0000000100003894         mov        byte [ss:rbp+var_7F], 0x11
@@ -195,7 +702,7 @@
 0x000000010000393f         mov        rsi, r15
 0x0000000100003942         jmp        0x10000436b
 
-0x0000000100003947         mov        rdi, qword [ds:r14+rbx*8+0x218]           ; case 12, XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+586
+0x0000000100003947         mov        rdi, qword [ds:r14+rbx*8+0x218]           ; case 3, 10, 11, 12, XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+586
 0x000000010000394f         mov        byte [ss:rbp+var_80], 0xc0
 0x0000000100003953         mov        byte [ss:rbp+var_7F], 0x11
 0x0000000100003957         mov        word [ss:rbp+var_7E], 0x0
@@ -386,7 +893,7 @@
 0x0000000100003bfd         mov        eax, 0x1
 0x0000000100003c02         jmp        0x1000041d4
 
-0x0000000100003c07         mov        rdi, qword [ds:r14+rbx*8+0x218]           ; case 4, XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+586
+0x0000000100003c07         mov        rdi, qword [ds:r14+rbx*8+0x218]           ; case 1, 2, 4, XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+586
 0x0000000100003c0f         mov        byte [ss:rbp+var_80], 0xc0
 0x0000000100003c13         mov        byte [ss:rbp+var_7F], 0x11
 0x0000000100003c17         mov        word [ss:rbp+var_7E], 0x0
@@ -577,7 +1084,7 @@
 0x0000000100003edb         mov        eax, 0x2
 0x0000000100003ee0         jmp        0x10000403f
 
-0x0000000100003ee5         mov        dword [ss:rbp+var_88], 0x0                ; case 13, XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+586
+0x0000000100003ee5         mov        dword [ss:rbp+var_88], 0x0                ; case 8, 13, XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+586
 0x0000000100003eef         mov        rdi, qword [ds:r14+rbx*8+0x218]
 0x0000000100003ef7         mov        byte [ss:rbp+var_80], 0xc0
 0x0000000100003efb         mov        byte [ss:rbp+var_7F], 0x11
@@ -950,7 +1457,7 @@
 
 0x000000010000436b         mov        dword [ds:rsi], 0xc                       ; XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+784, __ZN9CHardware9GetStatusEiP14FirefaceStatus+2411, __ZN9CHardware9GetStatusEiP14FirefaceStatus+2862, __ZN9CHardware9GetStatusEiP14FirefaceStatus+3374, __ZN9CHardware9GetStatusEiP14FirefaceStatus+3379
 
-0x0000000100004371         cmp        r12, qword [ss:rbp+var_30]                ; case 14, XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+83, __ZN9CHardware9GetStatusEiP14FirefaceStatus+160, __ZN9CHardware9GetStatusEiP14FirefaceStatus+566, __ZN9CHardware9GetStatusEiP14FirefaceStatus+586, __ZN9CHardware9GetStatusEiP14FirefaceStatus+860, __ZN9CHardware9GetStatusEiP14FirefaceStatus+1564, __ZN9CHardware9GetStatusEiP14FirefaceStatus+2576, __ZN9CHardware9GetStatusEiP14FirefaceStatus+3085, __ZN9CHardware9GetStatusEiP14FirefaceStatus+3383, __ZN9CHardware9GetStatusEiP14FirefaceStatus+3555
+0x0000000100004371         cmp        r12, qword [ss:rbp+var_30]                ; case 5, 14, XREF=__ZN9CHardware9GetStatusEiP14FirefaceStatus+83, __ZN9CHardware9GetStatusEiP14FirefaceStatus+160, __ZN9CHardware9GetStatusEiP14FirefaceStatus+566, __ZN9CHardware9GetStatusEiP14FirefaceStatus+586, __ZN9CHardware9GetStatusEiP14FirefaceStatus+860, __ZN9CHardware9GetStatusEiP14FirefaceStatus+1564, __ZN9CHardware9GetStatusEiP14FirefaceStatus+2576, __ZN9CHardware9GetStatusEiP14FirefaceStatus+3085, __ZN9CHardware9GetStatusEiP14FirefaceStatus+3383, __ZN9CHardware9GetStatusEiP14FirefaceStatus+3555
 0x0000000100004375         jne        0x10000441a
 
 0x000000010000437b         add        rsp, 0x88
@@ -1014,3 +1521,4 @@
 0x0000000100004430         dd         0xfffff7e7, 0xffffff51, 0xfffff45e, 0xfffff45e
 0x0000000100004440         dd         0xfffffac5, 0xfffff45e, 0xfffff527, 0xfffff527
 0x0000000100004450         dd         0xfffff527, 0xfffffac5, 0xffffff51, 0xfffff45e
+*/

@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include <errno.h>
+#include <unistd.h>	// sleep()
 
 #include "rme_uc.h"
 #include "usb.h"
@@ -569,6 +570,23 @@ SEND_AUDIO:
 	sigemptyset(&sigact.sa_mask);
 	sigact.sa_flags = 0;
 	sigaction(SIGINT, &sigact, NULL);
+
+
+
+
+	/*
+		NOTE: Test of GetStatus()
+	*/
+
+	while ( !do_exit )
+	{
+		GetStatus( devh );
+		printf( "\n\n" );
+
+		sleep(1);
+	}
+
+	goto out;
 
 
 

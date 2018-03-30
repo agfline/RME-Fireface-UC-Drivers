@@ -703,6 +703,8 @@ uint32_t hwGetRate( libusb_device_handle *dev, /*uint16_t productId,*/ uint8_t /
 */
 		ecx = data_4;
 
+		/* NOTE: here we check if the clock is set to internal (see CHardware::GetStatus()) */
+
 		eax = data_4;
 		eax >>= 0x9;
 		eax &= 0x7;
