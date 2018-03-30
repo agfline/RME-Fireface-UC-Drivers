@@ -538,9 +538,12 @@ SEND_AUDIO:
 		Set Sample Rate
 	*/
 
+	// if ( devh )
+	// {
+	// 	libusb_set_interface_alt_setting( devh, rc, 2 );
+	// }
+
 	hwSetSampleRate( devh, 44100 );
-
-
 
 	/*
 		Check Sample Rate was correctly set
@@ -578,15 +581,15 @@ SEND_AUDIO:
 		NOTE: Test of GetStatus()
 	*/
 
-	while ( !do_exit )
-	{
-		GetStatus( devh );
-		printf( "\n\n" );
-
-		sleep(1);
-	}
-
-	goto out;
+	// while ( !do_exit )
+	// {
+	// 	GetStatus( devh );
+	// 	printf( "\n\n" );
+    //
+	// 	sleep(1);
+	// }
+    //
+	// goto out;
 
 
 
