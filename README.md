@@ -431,7 +431,13 @@ wLength          : 0x0004
 
 * **[hwSetSampleRate()](./asm/FirefaceUSB/hwSetSampleRate.c)**
 
-Les deux transferts sont envoyés dans cet ordre. Ils peuvent être si besoin précédés d'un changement de configuration sur l'interface USB 0 (*bAlternateSetting*), voir la section **Audio**.
+Les deux transferts sont envoyés dans cet ordre. Ils peuvent être si besoin être précédé d'un changement de configuration sur l'interface USB 0 (*bAlternateSetting*), voir la section **Audio**.
+
+**Ce changement de l'alternate setting est indispensable dans le cas d'un changement de groupe de fréquences**, autrement la fréquence tombera au multiple du groupe en cours. Par exemple, si l'on est sur l'*alternate setting* **1** à 44100 Hz et que l'on change la fréquence à 96000 Hz sans passer sur l'*alternate setting* **2**, la fréquence tombera à 48000 Hz.
+
+* bAlternateSetting **1** : `[32000Hz; 64000Hz[`
+* bAlternateSetting **2** : `[64000Hz; 128000Hz[`
+* bAlternateSetting **3** : `[128000Hz; 192000Hz]`
 
 Les valeurs de *wValue* et *wIndex* sont déterminées par la fonction **hwSetSampleRate()**.
 
