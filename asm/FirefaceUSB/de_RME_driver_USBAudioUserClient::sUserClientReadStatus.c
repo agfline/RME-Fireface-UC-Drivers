@@ -27,7 +27,7 @@ int sUserClientReadStatus( libusb_device_handle *dev, /*uint32_t productId,*/ ui
 /*
 	0x00009cb7	 mov	dword [ss:rbp+var_28], 0x8
 */
-	uint32_t var_28 = 0x8;
+	// uint32_t var_28 = 0x8;
 
 /*
 	0x00009cbe	 movzx	eax, word [ds:rdi+0x124]			; contains the productId
