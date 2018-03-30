@@ -17,7 +17,9 @@ hwGetStatusReg( uint32_t *status, int length )
 	0x00000feb	sub	rsp, 0x20
 */
 	// rbp-0x04
-	uint32_t len = 0;	// TODO: Does someone care ?
+	uint32_t len = 0;   // TODO: Does someone care ?
+
+	ctrl_setup ctrl;
 
 
 /*
