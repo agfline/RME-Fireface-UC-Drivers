@@ -8,7 +8,7 @@
 /*
     TODO: Test with WordClock if it is realy freq_ids !
 
-    clock_src        // 7 on internal clock, 1 on SPDIF clock, 2, on OPTICAL clock
+    clock_src        // 7 on internal clock, 1 on SPDIF clock, 2 on OPTICAL clock
     ff_status_0x04   // This is 2 when OPTICAL is plugged in, 0 otherwise. COAX has no effect.
 
     word_sync        // WORDCLK ? 0 = NO LOCK, 1 = LOCK, 2 = SYNC
@@ -114,7 +114,6 @@ void GetStatus( libusb_device_handle *dev )
 
                 int rc = send_ctrl_setup( dev, &ctrl, (unsigned char*)&status );
 
-                printf( "raw_status     : 0x%08x\n", status );
 /*
                 0x00000001000038d0         mov        ecx, dword [ss:rbp+var_84]    // pointer to the returned status value ?
                 0x00000001000038d6         mov        edx, ecx                      // edx = status
@@ -128,7 +127,7 @@ void GetStatus( libusb_device_handle *dev )
                 0x00000001000038ef         mov        dword [ds:r15], esi
 */
                 uint32_t edx = (status >> 0x9) & 0x7;
-                uint32_t esi = 0x5; // internal clock source
+                uint32_t esi = 0x5;
 
                 if ( ((status >> 0x8) & 0x1) == 0 ) // test ch, 1    -     ZF = 1
                 {
@@ -142,7 +141,7 @@ void GetStatus( libusb_device_handle *dev )
 
                 uint32_t clock_src = esi;
 
-                printf( "clock_src : %d\n", clock_src );
+                printf( "clock_src : %x\n", clock_src );
 
 
 /*
