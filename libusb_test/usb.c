@@ -22,9 +22,15 @@ int do_send_ctrl_setup_trace( libusb_device_handle *dev, ctrl_setup *ctrl, unsig
 
     if ( data != NULL )
     {
-        snprintf( rx_data, 256, ">   rx_data : 0x%0*x",
-            ctrl->wLength * 2,
-            *data );
+        int offset = snprintf( rx_data, 256, ">   rx_data : 0x" );
+
+        int i = 0;
+
+        for ( i = 0; i < ctrl->wLength; i++ )
+        {
+            snprintf( rx_data+offset, 256-offset, "%02x", *(data+i) );
+            offset += 2;
+        }
     }
 
     fprintf( stdout, " tx (URB_CONTROL)  >   0x%02x  %02u (0x%02x)  0x%04x  0x%04x  0x%04x   |   %s()   %s\n",
@@ -70,7 +76,7 @@ int do_send_ctrl_setup( libusb_device_handle *dev, ctrl_setup *ctrl, unsigned ch
         this should simulate the reverse engineered bahavior (see hwGetRate())
         which seems to return zero on success instead of the number of byte transfered
      */
-     
+
     return 0;
 }
 
