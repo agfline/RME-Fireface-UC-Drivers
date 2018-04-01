@@ -6,19 +6,17 @@
 
 
 /*
-    TODO: Test with WordClock if it is realy freq_ids !
-
-    clock_src        // 7 on internal clock, 1 on SPDIF clock, 2 on OPTICAL clock
-    ff_status_0x04   // This is 2 when OPTICAL is plugged in, 0 otherwise. COAX has no effect.
+    clock_src        // 7 on internal clock, 1 on SPDIF clock, 2 on OPTICAL clock, 3 on WC clock
+    ff_status_0x04   // This is 2 when OPTICAL is plugged in, 0 otherwise. COAX and WC has no effect.
 
     word_sync        // WORDCLK ? 0 = NO LOCK, 1 = LOCK, 2 = SYNC
-    word_freq_id     // ???
+    word_freq_id     // WORDCLK frequency ID
 
     opti_sync        // OPTICAL : 0 = NO LOCK, 1 = LOCK, 2 = SYNC
-    opti_freq_id     // ???
+    opti_freq_id     // OPTICAL frequency ID
 
     coax_sync        // COAXIAL : 0 = NO LOCK, 1 = LOCK, 2 = SYNC
-    coax_freq_id     // ???
+    coax_freq_id     // COAXIAL frequency ID
 */
 
 
