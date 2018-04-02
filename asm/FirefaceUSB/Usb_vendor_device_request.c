@@ -1,5 +1,4 @@
 
-// SAME AS DEV
 
 /*
 		This function is used by several others for different purposes.
@@ -51,71 +50,69 @@
  				payload = 0x0000 (NULL)
  */
 
+ /* From https://github.com/opensource-apple/IOUSBFamily/blob/master/IOUSBFamily/Headers/USB.h
+     @struct IOUSBDevRequest from Apple implementation
+
+     @field wLength Length of data part of request, 16 bits, host endianess
+     @field pData Pointer to data for request - data returned in bus endianess
+     @field wLenDone Set by standard completion routine to number of data bytes
+     actually transferred
+
+ typedef struct {
+     UInt8       bmRequestType;
+     UInt8       bRequest;
+     UInt16      wValue;
+     UInt16      wIndex;
+     UInt16      wLength;
+     void *      pData;
+     UInt32      wLenDone;
+ } IOUSBDevRequest;
+ */
+
 usb_vendor_device_request(
-							char bmRequestType,
-							char bRequest,
-							uint16_t wValue,
-							uint16_t wIndex,
-							uint16_t wLength,
-							unsigned char *data,
-							uint32_t *len
-						 )
+                           char bmRequestType,
+                           char bRequest,
+                           uint16_t wValue,
+                           uint16_t wIndex,
+                           uint16_t wLength,
+                           unsigned char *data,
+                           uint32_t *len
+                         )
 {
-
-
-	/*
-
-		Usb_vendor_device_request( IOUSBDevice*, 	rdi		arg_1	IOUSBDevice *
-					   unsigned char,	rsi		arg_2	bRequest
-					   unsigned short, 	rdx		arg_3	wValue
-					   unsigned short, 	rcx		arg_4	wIndex
-					   void*, 		r8		arg_5	pData * (send/recv)
-					   unsigned short, 	r9		arg_6	wLength
-					   unsigned char, 	rbp+0x10	arg_7	bmRequestType
-					   unsigned int*	rbp+0x18	arg_8	wLenDone ?
-					 )
-
-*/
-
-/* From https://github.com/opensource-apple/IOUSBFamily/blob/master/IOUSBFamily/Headers/USB.h
-    @struct IOUSBDevRequest from Apple implementation
-
-    @field wLength Length of data part of request, 16 bits, host endianess
-    @field pData Pointer to data for request - data returned in bus endianess
-    @field wLenDone Set by standard completion routine to number of data bytes
-	actually transferred
-
-typedef struct {
-    UInt8       bmRequestType;
-    UInt8       bRequest;
-    UInt16      wValue;
-    UInt16      wIndex;
-    UInt16      wLength;
-    void *      pData;
-    UInt32      wLenDone;
-} IOUSBDevRequest;
-*/
 
 
 /*
 	================ B E G I N N I N G   O F   P R O C E D U R E ================
 
-	0x00000f9c	push	rbp
-	0x00000f9d	mov	rbp, rsp
-	0x00000fa0	sub	rsp, 0x20
+
+
+		Usb_vendor_device_request ( IOUSBDevice*    rdi      arg_1  IOUSBDevice *
+		                            unsigned char   rsi      arg_2  bRequest
+		                            unsigned short  rdx      arg_3  wValue
+		                            unsigned short  rcx      arg_4  wIndex
+		                            void*           r8       arg_5  pData * (send/recv)
+		                            unsigned short  r9       arg_6  wLength
+		                            unsigned char   rbp+0x10 arg_7  bmRequestType
+		                            unsigned int*   rbp+0x18 arg_8  wLenDone ?
+		                          )
+
+
+	0x00000f9c  push rbp
+	0x00000f9d  mov  rbp, rsp
+	0x00000fa0  sub  rsp, 0x20
 */
 	ctrl_setup ctrl;
 
 /*
-	0x00000fa4	mov	al, byte [ss:rbp+arg_0]
-	0x00000fa7	shl	al, 0x7
-	0x00000faa	or	al, 0x40
-	0x00000fac	mov	byte [ss:rbp-0x18], al		; bmRequestType
-	0x00000faf	mov	byte [ss:rbp-0x17], sil		; bRequest
-	0x00000fb3	mov	word [ss:rbp-0x16], dx		; wValue
-	0x00000fb7	mov	word [ss:rbp-0x14], cx		; wIndex
-	0x00000fbb	mov	word [ss:rbp-0x12], r9w		; wLength
-	0x00000fc0	mov	qword [ss:rbp-0x10], r8
+	0x00000fa4  mov  al, byte [ss:rbp+arg_0]
+	0x00000fa7  shl  al, 0x7
+	0x00000faa  or   al, 0x40
+	0x00000fac  mov  byte [ss:rbp-0x18], al   ; bmRequestType
+	0x00000faf  mov  byte [ss:rbp-0x17], sil  ; bRequest
+	0x00000fb3  mov  word [ss:rbp-0x16], dx   ; wValue
+	0x00000fb7  mov  word [ss:rbp-0x14], cx   ; wIndex
+	0x00000fbb  mov  word [ss:rbp-0x12], r9w  ; wLength
+	0x00000fc0  mov  qword [ss:rbp-0x10], r8
 */
 	ctrl.bmRequestType = (bmRequestType << 0x7) | 0x40;
 	ctrl.bRequest = bRequest;
@@ -125,13 +122,13 @@ typedef struct {
 //	ctrl.pData = data;
 
 /*
-	0x00000fc4	mov	rax, qword [ds:rdi]
-	0x00000fc7	lea	rsi, qword [ss:rbp-0x18]
-	0x00000fcb	xor	edx, edx
-	0x00000fcd	call	qword [ds:rax+0x938]   ; setup_request( IOUSBDevice *, ctrl_struct *, int )
-	0x00000fd3	mov	rcx, qword [ss:rbp+0x18]
-	0x00000fd7	test	rcx, rcx
-	0x00000fda	je	0xfe1
+	0x00000fc4  mov  rax, qword [ds:rdi]
+	0x00000fc7  lea  rsi, qword [ss:rbp-0x18]
+	0x00000fcb  xor  edx, edx
+	0x00000fcd  call qword [ds:rax+0x938]   ; setup_request( IOUSBDevice *, ctrl_struct *, int )
+	0x00000fd3  mov  rcx, qword [ss:rbp+0x18]
+	0x00000fd7  test rcx, rcx
+	0x00000fda  je   0xfe1
 */
 	print_ctrl_setup( &ctrl );
 //	send_setup_request( IOUSBDevice, &ctrl, 0 );
@@ -140,16 +137,16 @@ typedef struct {
 		return;
 
 /*
-	0x00000fdc	mov	edx, dword [ss:rbp-0x08]
-	0x00000fdf	mov	dword [ds:rcx], edx
+	0x00000fdc  mov  edx, dword [ss:rbp-0x08]
+	0x00000fdf  mov  dword [ds:rcx], edx
 */
 	else
 		*len = ctrl.wLenDone;
 
 /*
-	0x00000fe1	add	rsp, 0x20
-	0x00000fe5	pop	rbp
-	0x00000fe6	ret
+	0x00000fe1  add  rsp, 0x20
+	0x00000fe5  pop  rbp
+	0x00000fe6  ret
 			; endp
 */
 
